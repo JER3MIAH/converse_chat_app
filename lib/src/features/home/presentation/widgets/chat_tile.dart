@@ -6,6 +6,7 @@ import 'package:converse/src/shared/shared.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ChatTile extends ConsumerWidget {
   final VoidCallback? onTap;
@@ -73,9 +74,7 @@ class ChatTile extends ConsumerWidget {
                       }
 
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                          child: CircularProgressIndicator.adaptive(),
-                        );
+                        return _buildLoadinWidget(themeProv);
                       }
 
                       final latestMessage = snapshot.data;
@@ -110,5 +109,23 @@ class ChatTile extends ConsumerWidget {
               ),
             ),
           );
+  }
+
+  Center _buildLoadinWidget(ThemeProvider themeProv) {
+    return Center(
+      child: Shimmer.fromColors(
+        baseColor: themeProv.isDarkMode ? Colors.grey[800]! : Colors.grey[300]!,
+        highlightColor:
+            themeProv.isDarkMode ? Colors.grey[500]! : Colors.grey[100]!,
+        child: Container(
+          width: 230.w,
+          height: 12.h,
+          margin: EdgeInsets.symmetric(vertical: 5.h),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ),
+    );
   }
 }
