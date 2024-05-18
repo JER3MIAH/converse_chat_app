@@ -30,8 +30,13 @@ class ListOfChatsView extends ConsumerWidget {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator.adaptive(),
+          return Center(
+            child: ListView.builder(
+              itemCount: 8,
+              itemBuilder: (context, index) {
+                return const ChatTile(isLoading: true);
+              },
+            ),
           );
         }
 
