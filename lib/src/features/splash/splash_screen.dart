@@ -1,3 +1,4 @@
+import 'package:converse/src/features/home/logic/providers/user_provider.dart';
 import 'package:converse/src/features/navigation/app_navigator.dart';
 import 'package:converse/src/features/navigation/routes.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,7 @@ class SplashScreen extends HookConsumerWidget {
     final theme = Theme.of(context).colorScheme;
 
     useEffect(() {
-      // ref.read(userProvider.notifier).retrieveUserInfo();
+      ref.read(userProvider.notifier).retrieveUserInfo();
       Future.delayed(
         const Duration(milliseconds: 4000),
         () => AppNavigator.replaceAllNamed(HomeRoutes.home),
