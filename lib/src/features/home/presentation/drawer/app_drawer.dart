@@ -35,9 +35,13 @@ class AppDrawer extends ConsumerWidget {
                     CircleAvatar(
                       radius: 30.r,
                       backgroundColor: theme.primaryContainer,
-                      child: Icon(
-                        CupertinoIcons.person,
-                        color: theme.background,
+                      child: Text(
+                        userProv.user.username.substring(0, 1),
+                        style: TextStyle(
+                          fontSize: 25.sp,
+                          fontWeight: FontWeight.w700,
+                          color: appColors.white,
+                        ),
                       ),
                     ),
                     AppInkWell(
