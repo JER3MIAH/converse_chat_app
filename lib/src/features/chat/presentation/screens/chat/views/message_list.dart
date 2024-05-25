@@ -9,11 +9,9 @@ import 'package:lottie/lottie.dart';
 
 class MessageListView extends ConsumerWidget {
   final UserModel receiver;
-  final ScrollController scrollController;
   const MessageListView({
     super.key,
     required this.receiver,
-    required this.scrollController,
   });
 
   @override
@@ -60,7 +58,7 @@ class MessageListView extends ConsumerWidget {
           );
         } else {
           return ListView.builder(
-            controller: scrollController,
+            controller: ref.watch(chatProvider).scrollController,
             itemCount: chats.length,
             itemBuilder: (context, index) {
               final chat = chats[index];

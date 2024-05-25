@@ -1,4 +1,5 @@
 import 'package:converse/src/core/data/models/user_model.dart';
+import 'package:converse/src/features/chat/logic/providers/chat_provider.dart';
 import 'package:converse/src/features/chat/presentation/screens/chat/views/chat_menu_button.dart';
 import 'package:converse/src/features/chat/presentation/screens/chat/views/message_list.dart';
 import 'package:converse/src/features/chat/presentation/screens/chat/views/user_input.dart';
@@ -24,7 +25,17 @@ class ChatScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final theme = Theme.of(context).colorScheme;
-    final scrollController = useScrollController();
+    final focusNode = useFocusNode();
+
+    useEffect(() {
+      focusNode.addListener(() {
+        if (focusNode.hasFocus) {
+          ref.read(chatProvider.notifier).scrollDown();
+        }
+      });
+      ref.read(chatProvider.notifier).scrollDown();
+      return null;
+    }, const []);
 
     return Scaffold(
       appBar: AppBar(
@@ -61,12 +72,11 @@ class ChatScreen extends HookConsumerWidget {
             Expanded(
               child: MessageListView(
                 receiver: recipient,
-                scrollController: scrollController,
               ),
             ),
             UserInputView(
               receiver: recipient,
-              scrollController: scrollController,
+              focusNode: focusNode,
             ),
           ],
         ),

@@ -18,6 +18,23 @@ class ChatProvider extends ChangeNotifier {
     required this.chatService,
   });
 
+  ScrollController scrollController = ScrollController();
+
+  void scrollDown() {
+    if (scrollController.hasClients) {
+      Future.delayed(
+        const Duration(milliseconds: 500),
+        () {
+          scrollController.animateTo(
+            scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeOut,
+          );
+        },
+      );
+    }
+  }
+
   void sendMessage(
       {required UserModel receiver, required String message}) async {
     try {

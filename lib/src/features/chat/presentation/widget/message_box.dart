@@ -7,6 +7,7 @@ import 'package:converse/src/shared/shared.dart';
 import 'package:converse/src/shared/widgets/app_snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 class MessageBox extends ConsumerWidget {
   final bool isCurrentUser;
@@ -53,14 +54,14 @@ class MessageBox extends ConsumerWidget {
                               : appColors.white,
                         ),
                         children: [
-                          // TextSpan(
-                          //   text:
-                          //       ' ${DateFormat.jm().format(chat.timeStamp.toDate())}',
-                          //   style: TextStyle(
-                          //     color: appColors.coolGrey,
-                          //     fontSize: 10.sp,
-                          //   ),
-                          // ),
+                          TextSpan(
+                            text:
+                                ' ${DateFormat.Hm().format(chat.timeStamp.toDate())}',
+                            style: TextStyle(
+                              color: appColors.coolGrey,
+                              fontSize: 9.sp,
+                            ),
+                          ),
                         ]),
                   ),
                 ),

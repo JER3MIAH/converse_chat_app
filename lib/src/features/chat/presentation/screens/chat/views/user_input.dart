@@ -8,18 +8,18 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/foundation.dart' as foundation;
 
 class UserInputView extends HookConsumerWidget {
-  final ScrollController scrollController;
+  final FocusNode focusNode;
   final UserModel receiver;
   const UserInputView({
     super.key,
     required this.receiver,
-    required this.scrollController,
+    required this.focusNode,
   });
 
   @override
   Widget build(BuildContext context, ref) {
     final theme = Theme.of(context).colorScheme;
-    final focusNode = useFocusNode();
+    
     final chatController = useTextEditingController();
     final isEmpty = useState<bool>(true);
     final emojiOffStage = useState<bool>(true);
@@ -96,9 +96,7 @@ class UserInputView extends HookConsumerWidget {
                             message: chatController.text.trim());
                         chatController.clear();
                         isEmpty.value = true;
-                        scrollController.animateTo(0,
-                            duration: const Duration(milliseconds: 400),
-                            curve: Curves.easeOut);
+                        ref.read(chatProvider.notifier).scrollDown();
                       },
                       child: _buildCircle(
                         color: theme.primaryContainer,
