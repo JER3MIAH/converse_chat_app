@@ -17,3 +17,7 @@ class ChatRoutes {
   static const chat = '/chatScreen';
   static const worldChat = '/worldChatScreen';
 }
+
+class SettingsRoutes {
+  static const settings = '/settingsScreen';
+}

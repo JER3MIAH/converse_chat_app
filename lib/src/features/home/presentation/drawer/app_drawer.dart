@@ -79,7 +79,9 @@ class AppDrawer extends ConsumerWidget {
           AppDrawerTile(
             title: 'Settings',
             icon: settingIcon,
-            onTap: () {},
+            onTap: () {
+              AppNavigator.pushNamed(SettingsRoutes.settings);
+            },
           ),
           const Spacer(),
           AppDrawerTile(
