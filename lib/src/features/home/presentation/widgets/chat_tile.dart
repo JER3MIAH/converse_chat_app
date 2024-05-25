@@ -1,9 +1,8 @@
 import 'package:converse/src/features/chat/logic/providers/chat_service_provider.dart';
 import 'package:converse/src/features/home/logic/providers/user_provider.dart';
-import 'package:converse/src/features/home/presentation/widgets/chat_loading.dart';
+import 'package:converse/src/features/home/presentation/widgets/widgets.dart';
 import 'package:converse/src/features/theme/logic/theme_provider.dart';
 import 'package:converse/src/shared/shared.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
@@ -49,14 +48,7 @@ class ChatTile extends ConsumerWidget {
               ),
               child: ListTile(
                 contentPadding: EdgeInsets.zero,
-                leading: CircleAvatar(
-                  radius: 25.r,
-                  backgroundColor: theme.primary,
-                  child: Icon(
-                    CupertinoIcons.person,
-                    color: appColors.white,
-                  ),
-                ),
+                leading: UserAvatar(username: username!),
                 title: Text(
                   username!,
                   style: TextStyle(
@@ -86,9 +78,11 @@ class ChatTile extends ConsumerWidget {
                           return Text(
                             '${sentByUser ? 'you: ' : '$username: '}${latestMessage.message}',
                             style: subStyle,
+                            maxLines: 1,
                           );
                         } else {
                           return Text.rich(
+                            maxLines: 1,
                             TextSpan(
                               text: sentByUser ? 'you: ' : '$username: ',
                               style: subStyle,

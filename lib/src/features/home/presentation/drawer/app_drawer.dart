@@ -63,7 +63,6 @@ class AppDrawer extends ConsumerWidget {
               ],
             ),
           ),
-          //TODO: Make use of animations package for that cool page transition
           YBox(20.h),
           AppDrawerTile(
             title: 'World chat',

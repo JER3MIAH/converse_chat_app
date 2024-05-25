@@ -1,6 +1,6 @@
+import 'package:converse/src/features/home/presentation/widgets/widgets.dart';
 import 'package:converse/src/features/theme/logic/theme_provider.dart';
 import 'package:converse/src/shared/shared.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -17,7 +17,7 @@ class UserTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final theme = Theme.of(context).colorScheme;
+    // final theme = Theme.of(context).colorScheme;
     final themeProv = ref.watch(themeProvider);
 
     return BounceInAnimation(
@@ -36,14 +36,7 @@ class UserTile extends ConsumerWidget {
           ),
           child: ListTile(
             contentPadding: EdgeInsets.zero,
-            leading: CircleAvatar(
-              radius: 25.r,
-              backgroundColor: theme.primary,
-              child: Icon(
-                CupertinoIcons.person,
-                color: appColors.white,
-              ),
-            ),
+            leading: UserAvatar(username: username),
             title: Text(username),
             subtitle: Text(
               email,
