@@ -1,5 +1,8 @@
 import 'package:converse/src/shared/shared.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../widgets/widgets.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});
@@ -11,6 +14,48 @@ class SettingScreen extends StatelessWidget {
       body: Column(
         children: [
           _buildTopBar(theme),
+          const SettingHeaderText(text: 'GENERAL'),
+          SettingsTile(
+            hasSvg: false,
+            hasTopBorder: true,
+            iconWidget: CupertinoIcons.person,
+            leadingIcon: globeIcon,
+            title: 'Account',
+            onTap: () {},
+          ),
+          SettingsTile(
+            hasSvg: false,
+            iconWidget: Icons.notifications_outlined,
+            leadingIcon: notitficationIcon,
+            title: 'Notifications',
+            onTap: () {},
+          ),
+          SettingsTile(
+            leadingIcon: logoutIcon,
+            title: 'Logout',
+            onTap: () {},
+          ),
+          SettingsTile(
+            leadingIcon: trashIcon,
+            title: 'Delete account',
+            onTap: () {},
+          ),
+          const SettingHeaderText(text: 'FEEDBACK'),
+          SettingsTile(
+            hasSvg: false,
+            hasTopBorder: true,
+            iconWidget: Icons.error_outline,
+            leadingIcon: globeIcon,
+            title: 'Report a bug',
+            onTap: () {},
+          ),
+          SettingsTile(
+            hasSvg: false,
+            iconWidget: Icons.feedback_outlined,
+            leadingIcon: globeIcon,
+            title: 'Send feedback',
+            onTap: () {},
+          ),
         ],
       ),
     );

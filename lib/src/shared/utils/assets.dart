@@ -15,6 +15,7 @@ final String logoutIcon = 'logoutIcon'.svg;
 final String trashIcon = 'trashIcon'.svg;
 final String sendIcon = 'sendIcon'.svg;
 final String editIcon = 'editIcon'.svg;
+final String notitficationIcon = 'notitfication_icon'.svg;
 
 // extensions
 extension ImageExtension on String {
