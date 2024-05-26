@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 
 class UserAvatar extends StatelessWidget {
   final String username;
+  final Color? color;
+  final double? radius;
   const UserAvatar({
     super.key,
     required this.username,
+    this.color,
+    this.radius,
   });
 
   @override
@@ -13,8 +17,8 @@ class UserAvatar extends StatelessWidget {
     final theme = Theme.of(context).colorScheme;
 
     return CircleAvatar(
-      radius: 25.r,
-      backgroundColor: theme.primary,
+      radius: radius ?? 25.r,
+      backgroundColor: color ?? theme.primary,
       child: Text(
         username.substring(0, 1),
         style: TextStyle(

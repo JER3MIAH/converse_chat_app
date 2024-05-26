@@ -3,7 +3,10 @@ import 'package:converse/src/features/home/logic/providers/user_provider.dart';
 import 'package:converse/src/features/home/presentation/drawer/app_drawer.dart';
 import 'package:converse/src/features/home/presentation/fab/fab.dart';
 import 'package:converse/src/features/home/presentation/screens/views/list_of_chats.dart';
+import 'package:converse/src/features/notifications/data/repositories/local_notifications.dart';
+import 'package:converse/src/features/notifications/logic/providers/notification_service_provider.dart';
 import 'package:converse/src/shared/shared.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -17,6 +20,9 @@ class HomeScreen extends HookConsumerWidget {
 
     useEffect(() {
       ref.read(userProvider.notifier).retrieveUserInfo();
+      ref.read(notifServiceProvider).requestPermission();
+      ref.read(notifServiceProvider).getToken();
+      ref.read(notifServiceProvider).initInfo();
       return null;
     }, const []);
 
@@ -37,7 +43,18 @@ class HomeScreen extends HookConsumerWidget {
             ),
           ],
           onTap: () {
-            // print("Tap Event");
+            RemoteMessage message = const RemoteMessage(
+              notification: RemoteNotification(
+                title: 'Notification Title',
+                body: 'Notification Body',
+              ),
+            );
+            LocalNotifications.showSimpleNotification(
+              title: 'Jeremiah',
+              body: 'Hii, This is my first local notification',
+              payload: 'Simple data',
+              message: message,
+            );
           },
         ),
         leading: Builder(builder: (context) {
