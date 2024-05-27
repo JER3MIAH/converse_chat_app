@@ -58,6 +58,7 @@ class AuthService {
 
   Future<void> deleteAccount() async {
     try {
+      //TODO: Fix
       User? user = _auth.currentUser;
       if (user != null) {
         //? Get user's email before deleting the account

@@ -1,14 +1,19 @@
+import 'package:converse/src/features/home/logic/providers/user_provider.dart';
+import 'package:converse/src/features/navigation/app_navigator.dart';
+import 'package:converse/src/features/navigation/routes.dart';
 import 'package:converse/src/shared/shared.dart';
+import 'package:converse/src/shared/widgets/app_snackbars.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../widgets/widgets.dart';
 
-class SettingScreen extends StatelessWidget {
+class SettingScreen extends ConsumerWidget {
   const SettingScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     final theme = Theme.of(context).colorScheme;
     return Scaffold(
       body: Column(
@@ -38,7 +43,26 @@ class SettingScreen extends StatelessWidget {
           SettingsTile(
             leadingIcon: trashIcon,
             title: 'Delete account',
-            onTap: () {},
+            onTap: () {
+              AppDialog.dialog(
+                DeleteDialog(
+                  message: 'Are you sure you want to delete your account?',
+                  onTap: () async {
+                    AppNavigator.popDialog();
+                    final isSuccessful =
+                        await ref.read(userProvider.notifier).deleteUser();
+                    if (isSuccessful) {
+                      AppNavigator.replaceNamed(AuthRoutes.signUp);
+                    } else {
+                      AppSnackBar.showSnackbar(
+                        message: 'An error occured, could not delete account',
+                      );
+                    }
+                  },
+                ),
+                bgColor: theme.background,
+              );
+            },
           ),
           const SettingHeaderText(text: 'FEEDBACK'),
           SettingsTile(

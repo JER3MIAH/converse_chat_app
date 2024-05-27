@@ -43,6 +43,17 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
+  Future<bool> deleteUser() async {
+    try {
+      await authService.deleteAccount();
+      user = UserModel.empty();
+      notifyListeners();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   void clearUserState() {
     user = UserModel.empty();
   }

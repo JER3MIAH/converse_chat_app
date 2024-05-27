@@ -44,65 +44,51 @@ class AppButton extends StatelessWidget {
                     Theme.of(context)
                         .textTheme
                         .bodyLarge!
-                        .copyWith(color: theme.background),
+                        .copyWith(color: appColors.white),
               ),
       ),
     );
   }
 }
 
-class AppOutlinedButton extends StatelessWidget {
-  final String text;
-  final VoidCallback? onTap;
-  final Color? overlayColor;
-  final Color? borderSideColor, textColor;
-  final double height;
-  final BorderRadius? borderRadius;
-  const AppOutlinedButton({
+class AppOutlineButton extends StatelessWidget {
+  const AppOutlineButton({
     super.key,
-    required this.text,
-    this.onTap,
-    this.overlayColor,
-    this.borderSideColor,
-    this.height = 60,
-    this.borderRadius,
-    this.textColor,
+    required this.label,
+    required this.onPressed,
+    this.borderColor,
+    this.radius = 20,
+    this.size,
+    this.labelStyle,
   });
+
+  final String label;
+  final TextStyle? labelStyle;
+  final VoidCallback onPressed;
+  final Color? borderColor;
+  final double radius;
+  final Size? size;
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(12),
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: height,
-        child: OutlinedButton(
-          style: ButtonStyle(
-            padding:
-                MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 12.h)),
-            overlayColor: MaterialStatePropertyAll(
-                overlayColor ?? appColors.error.withOpacity(0.4)),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                borderRadius: borderRadius ??
-                    BorderRadius.circular(10), // Adjust the radius as needed
-              ),
-            ),
-            side: MaterialStatePropertyAll(
-              BorderSide(
-                color: borderSideColor ?? appColors.error,
-              ),
-            ),
-          ),
-          onPressed: onTap,
-          child: Text(
-            text,
-            style: TextStyle(
-              fontSize: 16..sp,
-              fontWeight: FontWeight.w400,
-              color: textColor ?? appColors.error,
-            ),
-          ),
+    return OutlinedButton(
+      onPressed: onPressed,
+      style: OutlinedButton.styleFrom(
+        fixedSize: size,
+        side: BorderSide(
+          color: borderColor ?? appColors.blue,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(radius),
+        ),
+      ),
+      child: Center(
+        child: Text(
+          label,
+          style: labelStyle ??
+              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: appColors.blue,
+                  ),
         ),
       ),
     );
