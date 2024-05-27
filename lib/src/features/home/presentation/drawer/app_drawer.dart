@@ -90,8 +90,13 @@ class AppDrawer extends ConsumerWidget {
             title: 'Logout',
             icon: logoutIcon,
             onTap: () async {
-              await ref.read(userProvider.notifier).logout();
-              AppNavigator.replaceNamed(AuthRoutes.login);
+              final isSuccessful =
+                  await ref.read(userProvider.notifier).logout();
+              if (isSuccessful) {
+                AppNavigator.replaceNamed(AuthRoutes.login);
+              } else {
+                AppSnackBar.showSnackbar(message: 'Failed to log out');
+              }
             },
           ),
         ],

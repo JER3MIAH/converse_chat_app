@@ -38,7 +38,15 @@ class SettingScreen extends ConsumerWidget {
           SettingsTile(
             leadingIcon: logoutIcon,
             title: 'Logout',
-            onTap: () {},
+            onTap: () async {
+              final isSuccessful =
+                  await ref.read(userProvider.notifier).logout();
+              if (isSuccessful) {
+                AppNavigator.replaceNamed(AuthRoutes.login);
+              } else {
+                AppSnackBar.showSnackbar(message: 'Failed to log out');
+              }
+            },
           ),
           SettingsTile(
             leadingIcon: trashIcon,

@@ -21,19 +21,12 @@ class AppSnackBar {
               color: textColor ?? const Color(0xffEB0000),
             ),
         leftBarIndicatorColor: leftBarColor ?? const Color(0xffEB0000),
-        titleText: Text(
-          title ?? 'Error',
-          style: TextStyle(
-            color: textColor ?? const Color(0xffEB0000),
-            fontSize: 18.sp,
-          ),
-        ),
         messageText: Text(
           message,
           style: TextStyle(
-            color: textColor ?? const Color(0xffEB0000),
+            color: textColor ?? appColors.white,
             fontWeight: FontWeight.w400,
-            fontSize: 18.sp,
+            fontSize: 16.sp,
           ),
         ),
         isDismissible: true,
@@ -41,7 +34,7 @@ class AppSnackBar {
         duration: duration ?? const Duration(seconds: 3),
         dismissDirection: DismissDirection.horizontal,
         padding: EdgeInsets.symmetric(horizontal: 10.w),
-        backgroundColor: bgColor ?? const Color(0xFFFEF2F2),
+        backgroundColor: bgColor ?? Colors.red,
       ),
     );
   }
