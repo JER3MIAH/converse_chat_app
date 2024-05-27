@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:converse/src/features/notifications/data/repositories/local_notifications.dart';
+import 'package:converse/src/features/notifications/data/secrets.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -26,15 +27,12 @@ class NotificationService {
       (token) {
         mToken = token!;
         log('My token is $token');
-        // saveToken(token);
       },
     );
     return mToken;
   }
 
   void sendPushNotification(String token, String title, String bodyy) async {
-    const bearerToken =
-        'ya29.a0AXooCgs-x20AYgjPRJ9Edl829XhNckoNr1qhPoHxjMLM8fBFwdK6QihpqSmpDs7evIvH9RmcHfKEO9f6_Rwkpp9DPy1C-UL4mJRRCImLA7GjDPYQqphtNiGZmBea9mUuWkcbbaTm-LLUXfNLTrnCWSMj3QhxDVhy08rwaCgYKAQYSARMSFQHGX2MimIbPRecZRKsdcWNu89hyWA0171';
     final body = {
       "message": {
         "token": token,
