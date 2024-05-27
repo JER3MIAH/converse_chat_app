@@ -38,4 +38,21 @@ class DatabaseService {
       throw e.toString();
     }
   }
+
+  Future<void> deleteUserFromDatabase(String email) async {
+    try {
+      QuerySnapshot response =
+          await _db.collection('users').where('email', isEqualTo: email).get();
+
+      if (response.docs.isNotEmpty) {
+        await _db.collection('users').doc(response.docs[0].id).delete();
+      } else {
+        log('No user found with email: $email');
+        throw 'No user found with email: $email';
+      }
+    } catch (e) {
+      log('Failed to delete user from database: $e');
+      throw e.toString();
+    }
+  }
 }

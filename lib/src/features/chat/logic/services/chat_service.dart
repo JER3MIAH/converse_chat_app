@@ -110,7 +110,7 @@ class ChatService {
 
     //? Send push notification
     await notificationService.sendPushNotification(
-      userProvider.user.pushToken,
+      newMessage.receiver.pushToken,
       newMessage.sender.username,
       messageType == kImageType ? 'image 📷' : newMessage.message,
     );

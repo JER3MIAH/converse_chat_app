@@ -55,4 +55,25 @@ class AuthService {
       throw Exception(e);
     }
   }
+
+  Future<void> deleteAccount() async {
+    try {
+      User? user = _auth.currentUser;
+      if (user != null) {
+        //? Get user's email before deleting the account
+        String email = user.email!;
+
+        //? Delete user from Firebase Authentication
+        await user.delete();
+
+        //? Remove user data from the database
+        await databaseService.deleteUserFromDatabase(email);
+
+      } else {
+        throw Exception("No user is currently signed in.");
+      }
+    } on FirebaseAuthException catch (e) {
+      throw Exception(e);
+    }
+  }
 }
