@@ -46,9 +46,9 @@ class AppSnackBar {
     );
   }
 
-  static showTips(String message) {
+  static showTips(String? title, String message) {
     Get.snackbar(
-      "Tips",
+      title ?? "Tips",
       message,
       duration: const Duration(seconds: 4),
       dismissDirection: DismissDirection.horizontal,

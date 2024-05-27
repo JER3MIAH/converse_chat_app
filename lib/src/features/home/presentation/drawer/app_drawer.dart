@@ -4,6 +4,7 @@ import 'package:converse/src/features/navigation/app_navigator.dart';
 import 'package:converse/src/features/navigation/routes.dart';
 import 'package:converse/src/features/theme/logic/theme_provider.dart';
 import 'package:converse/src/shared/shared.dart';
+import 'package:converse/src/shared/widgets/app_snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -72,7 +73,9 @@ class AppDrawer extends ConsumerWidget {
             icon: globeIcon,
             onTap: () {
               // AppNavigator.popRoute();
-              AppNavigator.pushNamed(ChatRoutes.worldChat);
+              // AppNavigator.pushNamed(ChatRoutes.worldChat);
+              AppSnackBar.showTips(
+                  'Coming soon', 'This feature will be available soon');
             },
           ),
           AppDrawerTile(

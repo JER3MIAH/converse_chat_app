@@ -3,6 +3,7 @@ import 'package:converse/src/features/home/logic/providers/user_provider.dart';
 import 'package:converse/src/features/navigation/nav.dart';
 import 'package:converse/src/features/navigation/routes.dart';
 import 'package:converse/src/shared/shared.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -62,6 +63,10 @@ class ListOfChatsView extends ConsumerWidget {
                         decoration: TextDecoration.underline,
                         decorationColor: theme.primaryContainer,
                       ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          AppNavigator.pushNamed(HomeRoutes.newMessage);
+                        },
                     ),
                     TextSpan(
                       text: ' to start a chat',
