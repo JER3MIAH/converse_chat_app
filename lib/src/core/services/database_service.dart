@@ -21,13 +21,14 @@ class DatabaseService {
   }
 
   Future<UserModel> addUserToDataBase(
-      String username, String email) async {
+      String username, String email, String pushToken) async {
     try {
       DocumentReference response = await _db.collection('users').add(
             UserModel(
               id: const Uuid().v4(),
               username: username,
               email: email,
+              pushToken: pushToken,
             ).toMap(),
           );
       DocumentSnapshot snapshot = await response.get();

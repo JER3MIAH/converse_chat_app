@@ -60,6 +60,10 @@ class HomeScreen extends HookConsumerWidget {
         leading: Builder(builder: (context) {
           return GestureDetector(
             onTap: () {
+              ref.read(notifServiceProvider).sendPushNotification(
+                  'fIxRQ2tZQuCaH8KuS6Cl9L:APA91bHXJdOVbgToc50LfZaSHjt6o5HX4pAUGbzigjMuz1-dBJJv_Q0Fuj31a1bi-zLn5nnOoliaHT1r2VWuaIvGlpSiTLX-P4m4X7VsbosbYq1C8pbeLMgkuk2Q8u06nxzYPNJ-sSgP',
+                  'From jeremiah',
+                  'Heyyyyyyyyyyy');
               Scaffold.of(context).openDrawer();
             },
             child: FittedBox(

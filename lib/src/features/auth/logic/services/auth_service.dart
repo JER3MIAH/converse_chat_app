@@ -1,11 +1,14 @@
 import 'package:converse/src/core/services/database_service.dart';
+import 'package:converse/src/features/notifications/logic/services/notification_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
   final DatabaseService databaseService;
+  final NotificationService notificationService;
 
   AuthService({
     required this.databaseService,
+    required this.notificationService,
   });
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -13,6 +16,7 @@ class AuthService {
   Future<UserCredential> signUp(
       String username, String email, String password) async {
     try {
+      final pushToken = await notificationService.getToken();
       UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -20,7 +24,11 @@ class AuthService {
       );
       await userCredential.user!.updateDisplayName(username);
 
-      await databaseService.addUserToDataBase(username, email);
+      await databaseService.addUserToDataBase(
+        username,
+        email,
+        pushToken,
+      );
       return userCredential;
     } on FirebaseAuthException catch (e) {
       throw Exception(e);

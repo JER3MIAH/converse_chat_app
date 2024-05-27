@@ -29,6 +29,7 @@ class ChatService {
           id: user['id'],
           username: user['username'],
           email: user['email'],
+          pushToken: user['pushToken'],
         );
       }).toList();
     });
@@ -44,6 +45,7 @@ class ChatService {
           id: user['id'],
           username: user['username'],
           email: user['email'],
+          pushToken: user['pushToken'],
         );
 
         final chatRoomID =
