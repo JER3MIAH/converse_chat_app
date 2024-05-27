@@ -1,6 +1,7 @@
 import 'package:converse/src/features/home/logic/providers/user_provider.dart';
 import 'package:converse/src/features/navigation/app_navigator.dart';
 import 'package:converse/src/features/navigation/routes.dart';
+import 'package:converse/src/features/notifications/logic/providers/notification_service_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -15,6 +16,8 @@ class SplashScreen extends HookConsumerWidget {
 
     useEffect(() {
       ref.read(userProvider.notifier).retrieveUserInfo();
+      ref.read(notifServiceProvider).requestPermission();
+      ref.read(notifServiceProvider).initInfo();
       Future.delayed(
         const Duration(milliseconds: 4000),
         () => AppNavigator.replaceAllNamed(HomeRoutes.home),

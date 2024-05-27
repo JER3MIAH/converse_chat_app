@@ -32,7 +32,7 @@ class NotificationService {
     return mToken;
   }
 
-  void sendPushNotification(String token, String title, String bodyy) async {
+  Future<void> sendPushNotification(String token, String title, String bodyy) async {
     final body = {
       "message": {
         "token": token,

@@ -20,9 +20,6 @@ class HomeScreen extends HookConsumerWidget {
 
     useEffect(() {
       ref.read(userProvider.notifier).retrieveUserInfo();
-      ref.read(notifServiceProvider).requestPermission();
-      ref.read(notifServiceProvider).getToken();
-      ref.read(notifServiceProvider).initInfo();
       return null;
     }, const []);
 
@@ -61,7 +58,7 @@ class HomeScreen extends HookConsumerWidget {
           return GestureDetector(
             onTap: () {
               ref.read(notifServiceProvider).sendPushNotification(
-                  'fIxRQ2tZQuCaH8KuS6Cl9L:APA91bHXJdOVbgToc50LfZaSHjt6o5HX4pAUGbzigjMuz1-dBJJv_Q0Fuj31a1bi-zLn5nnOoliaHT1r2VWuaIvGlpSiTLX-P4m4X7VsbosbYq1C8pbeLMgkuk2Q8u06nxzYPNJ-sSgP',
+                  ref.read(userProvider).user.pushToken,
                   'From jeremiah',
                   'Heyyyyyyyyyyy');
               Scaffold.of(context).openDrawer();

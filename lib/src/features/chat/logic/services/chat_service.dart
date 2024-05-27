@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:converse/src/features/home/data/models/user_chat.dart';
+import 'package:converse/src/features/notifications/logic/services/notification_service.dart';
 import 'package:converse/src/shared/shared.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -13,8 +14,10 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 
 class ChatService {
   final UserProvider userProvider;
+  final NotificationService notificationService;
   ChatService({
     required this.userProvider,
+    required this.notificationService,
   });
   final _db = FirebaseFirestore.instance;
   final _firebaseStorage = FirebaseStorage.instance;
@@ -104,6 +107,13 @@ class ChatService {
         ],
       ),
     });
+
+    //? Send push notification
+    await notificationService.sendPushNotification(
+      userProvider.user.pushToken,
+      newMessage.sender.username,
+      messageType == kImageType ? 'image 📷' : newMessage.message,
+    );
   }
 
   Future<void> createNewChat(String id1, String id2) async {
