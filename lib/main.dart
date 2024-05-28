@@ -20,9 +20,12 @@ Future<void> main() async {
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   }
   await FirebaseMessaging.instance.getInitialMessage();
-  runApp(
-    const ProviderScope(
-      child: MyApp(),
+  Future.delayed(
+    const Duration(milliseconds: 500),
+    () => runApp(
+      const ProviderScope(
+        child: MyApp(),
+      ),
     ),
   );
 }

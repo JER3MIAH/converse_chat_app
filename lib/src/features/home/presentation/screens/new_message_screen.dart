@@ -21,21 +21,20 @@ class NewMessageScreen extends HookWidget {
         backgroundColor: theme.primary,
         centerTitle: false,
         title: isSearching.value
-            ? Expanded(
-                child: TextField(
-                focusNode: focusNode,
-                controller: searchController,
-                style: TextStyle(color: appColors.white),
-                cursorColor: appColors.white,
-                onChanged: (val) {
-                  isFieldEmpty.value = searchController.text.isEmpty;
-                  searchQuery.value = val;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Search',
-                  hintStyle: TextStyle(color: appColors.white),
-                ),
-              ))
+            ? TextField(
+              focusNode: focusNode,
+              controller: searchController,
+              style: TextStyle(color: appColors.white),
+              cursorColor: appColors.white,
+              onChanged: (val) {
+                isFieldEmpty.value = searchController.text.isEmpty;
+                searchQuery.value = val;
+              },
+              decoration: InputDecoration(
+                hintText: 'Search',
+                hintStyle: TextStyle(color: appColors.white),
+              ),
+            )
             : Text(
                 'New Message',
                 style: TextStyle(

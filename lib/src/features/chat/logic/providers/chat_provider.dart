@@ -74,12 +74,17 @@ class ChatProvider extends ChangeNotifier {
     return chatService.getMessages(receiver);
   }
 
+  Stream<List<UserModel>> getUserChats() {
+    return chatService.getChattedUsersStream();
+  }
+
   Future<bool> checkChatExists(String chatRoomID) async {
     return await chatService.checkChatExists(chatRoomID);
   }
 
   Future<void> createNewChat(String id1, String id2) async {
     await chatService.createNewChat(id1, id2);
+    notifyListeners();
   }
 
   void update() => notifyListeners();

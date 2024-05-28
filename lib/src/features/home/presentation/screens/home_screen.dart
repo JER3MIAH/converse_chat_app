@@ -4,7 +4,6 @@ import 'package:converse/src/features/home/presentation/drawer/app_drawer.dart';
 import 'package:converse/src/features/home/presentation/fab/fab.dart';
 import 'package:converse/src/features/home/presentation/screens/views/list_of_chats.dart';
 import 'package:converse/src/features/notifications/data/repositories/local_notifications.dart';
-import 'package:converse/src/features/notifications/logic/providers/notification_service_provider.dart';
 import 'package:converse/src/shared/shared.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -57,10 +56,10 @@ class HomeScreen extends HookConsumerWidget {
         leading: Builder(builder: (context) {
           return GestureDetector(
             onTap: () {
-              ref.read(notifServiceProvider).sendPushNotification(
-                  ref.read(userProvider).user.pushToken,
-                  'From jeremiah',
-                  'Heyyyyyyyyyyy');
+              // ref.read(notifServiceProvider).sendPushNotification(
+              //     ref.read(userProvider).user.pushToken,
+              //     'From jeremiah',
+              //     'Heyyyyyyyyyyy');
               Scaffold.of(context).openDrawer();
             },
             child: FittedBox(

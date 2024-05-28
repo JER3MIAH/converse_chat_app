@@ -1,4 +1,4 @@
-import 'package:converse/src/features/chat/logic/providers/chat_service_provider.dart';
+import 'package:converse/src/features/chat/logic/providers/chat_provider.dart';
 import 'package:converse/src/features/home/logic/providers/user_provider.dart';
 import 'package:converse/src/features/navigation/nav.dart';
 import 'package:converse/src/features/navigation/routes.dart';
@@ -24,7 +24,7 @@ class ListOfChatsView extends ConsumerWidget {
     );
 
     return StreamBuilder(
-      stream: ref.watch(chatServiceProvider).getChattedUsersStream(),
+      stream: ref.read(chatProvider.notifier).getUserChats(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));

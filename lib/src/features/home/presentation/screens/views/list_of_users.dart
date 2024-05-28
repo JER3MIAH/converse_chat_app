@@ -20,7 +20,7 @@ class ListOfUsersView extends ConsumerWidget {
     final userProv = ref.watch(userProvider);
 
     return StreamBuilder(
-      stream: ref.watch(chatServiceProvider).getUsersStream(),
+      stream: ref.read(chatServiceProvider).getUsersStream(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return const Center(child: Text('Error'));
