@@ -66,6 +66,7 @@ class LoginScreen extends HookConsumerWidget {
               controller: passwordController,
               labelText: 'Password',
               isPasswordField: true,
+              obscureText: true,
               keyBoardType: TextInputType.visiblePassword,
               validator: (value) {
                 return Validator.nonEmptyField(value);

@@ -76,6 +76,7 @@ class SignUpScreen extends HookConsumerWidget {
               AppTextField(
                 controller: passwordController,
                 labelText: 'Password',
+                obscureText: true,
                 keyBoardType: TextInputType.visiblePassword,
                 isPasswordField: true,
                 validator: (value) {
@@ -86,6 +87,7 @@ class SignUpScreen extends HookConsumerWidget {
               AppTextField(
                 controller: confirmPasswordController,
                 labelText: 'Confirm password',
+                obscureText: true,
                 keyBoardType: TextInputType.visiblePassword,
                 isPasswordField: true,
                 validator: (value) {
