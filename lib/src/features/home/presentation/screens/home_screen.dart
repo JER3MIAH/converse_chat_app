@@ -1,4 +1,5 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:converse/src/features/chat/logic/providers/chat_provider.dart';
 import 'package:converse/src/features/home/logic/providers/user_provider.dart';
 import 'package:converse/src/features/home/presentation/drawer/app_drawer.dart';
 import 'package:converse/src/features/home/presentation/fab/fab.dart';
@@ -74,7 +75,12 @@ class HomeScreen extends HookConsumerWidget {
           );
         }),
       ),
-      body: const ListOfChatsView(),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          return ref.read(chatProvider.notifier).update();
+        },
+        child: const ListOfChatsView(),
+      ),
       drawer: const AppDrawer(),
       floatingActionButton: const AppFab(),
     );
