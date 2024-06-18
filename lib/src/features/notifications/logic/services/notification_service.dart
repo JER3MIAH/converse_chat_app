@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:converse/src/features/notifications/data/repositories/local_notifications.dart';
-import 'package:converse/src/features/notifications/data/secrets.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -32,7 +31,8 @@ class NotificationService {
     return mToken;
   }
 
-  Future<void> sendPushNotification(String token, String title, String bodyy) async {
+  Future<void> sendPushNotification(
+      String token, String title, String bodyy) async {
     final body = {
       "message": {
         "token": token,
@@ -43,6 +43,7 @@ class NotificationService {
       }
     };
     try {
+      String bearerToken = '';
       final res = await http.post(
         Uri.parse(
             'https://fcm.googleapis.com/v1/projects/star-e0a66/messages:send'),
