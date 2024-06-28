@@ -5,11 +5,10 @@ class User:
     """User class
     """
 
-    def __init__(self, username, email, uid=None, access_token=None) -> None:
-        self.uid = uid
+    def __init__(self, username, email, password) -> None:
         self.username = username
         self.email = email
-        self.access_token = access_token
+        self.password = password
 
     def to_dict(self):
         """Converts User model to a dictionary
@@ -18,10 +17,9 @@ class User:
             dict: user model if dict format
         """
         return {
-            'uid': self.uid,
             'username': self.username,
             'email': self.email,
-            'access_token': self.access_token,
+            'password': self.password,
         }
 
     @staticmethod
@@ -35,8 +33,7 @@ class User:
             user: User object
         """
         return User(
-            uid=user_dict['uid'],
             username=user_dict['username'],
             email=user_dict['email'],
-            access_token=user_dict['access_token'],
+            password=user_dict['password'],
         )
