@@ -4,6 +4,7 @@ const userSchema = new mongoose.Schema({
     username: String,
     email: String,
     password: String,
+    fcmToken: String,
 }, { collection: "users" });
 
 const User = mongoose.model('User', userSchema);

@@ -28,6 +28,7 @@ export const register = async (req, res) => {
                 username: username,
                 email: email,
                 password: hash,
+                fcmToken: null,
             });
             await newUser.save();
             const token = generateToken(newUser);
@@ -129,6 +130,31 @@ export const updateProfile = async (req, res) => {
             message: "Profile updated successfull",
         };
         res.json(responseData);
+    } catch (error) {
+        console.error(`Error updating profile: ${error}`);
+        res.status(500).json({ message: "Error updating profile." });
+    }
+};
+
+export const saveFcmToken = async (req, res) => {
+    const { token } = req.body;
+    const userId = req.userId;
+
+
+    if (!token) {
+        return res.status(400).json({ message: "token is required" });
+    }
+
+    try {
+        const updatedUser = await userService.updateUser(userId, { fcmToken: token });
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: "User not found." });
+        }
+
+        res.json({
+            message: "Fcm token saved successfuly",
+        });
     } catch (error) {
         console.error(`Error updating profile: ${error}`);
         res.status(500).json({ message: "Error updating profile." });

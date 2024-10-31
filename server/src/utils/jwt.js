@@ -5,5 +5,5 @@ const JWT_SECRET = config.JWT_SECRET || 'your_secret_key';
 
 // Function to generate JWT
 export const generateToken = (user) => {
-    return jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1h' });
+    return jwt.sign({ id: user._id }, JWT_SECRET, /*{ expiresIn: '1h' }*/);
 };
