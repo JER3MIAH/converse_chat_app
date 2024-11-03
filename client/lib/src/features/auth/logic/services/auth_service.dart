@@ -81,7 +81,7 @@ class AuthServiceImpl extends AuthService {
   Future<Either<Failure, void>> saveFcmToken() async {
     try {
       final fcmToken = await sl<NotificationService>().getToken();
-      await client.post(authEndpoints.saveFcmToken, data: {'token': fcmToken});
+      await client.patch(authEndpoints.saveFcmToken, data: {'token': fcmToken});
       return right(null);
     } catch (err, stack) {
       log('Save fcm token error: $err\n$stack');

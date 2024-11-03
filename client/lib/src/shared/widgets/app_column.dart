@@ -16,7 +16,7 @@ class AppColumn extends StatelessWidget {
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.crossAxisAlignment = CrossAxisAlignment.center,
     this.padding,
-    this.shouldScroll = true,
+    this.shouldScroll = false,
   });
 
   @override

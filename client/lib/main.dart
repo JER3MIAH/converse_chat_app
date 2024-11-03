@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 import 'package:converse/firebase_options.dart';
 import 'package:converse/src/app_injection_container.dart';
 import 'src/app.dart';
@@ -15,11 +16,14 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await LocalNotifications.init();
-  if (!FirebaseMessaging.instance.isAutoInitEnabled) {
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  if (!Platform.isWindows) {
+    await LocalNotifications.init();
+    if (!FirebaseMessaging.instance.isAutoInitEnabled) {
+      FirebaseMessaging.onBackgroundMessage(
+          _firebaseMessagingBackgroundHandler);
+    }
+    await FirebaseMessaging.instance.getInitialMessage();
   }
-  await FirebaseMessaging.instance.getInitialMessage();
   await AppInjectionContainer.init();
   Future.delayed(
     const Duration(milliseconds: 500),

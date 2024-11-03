@@ -1,7 +1,7 @@
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import { generateToken } from "../utils/jwt.js"
-import { trimUserModel } from "../utils/user-utils.js";
+import { trimUserModel } from "../utils/trimmer.js";
 
 import * as userService from "../services/user-service.js";
 
@@ -83,6 +83,22 @@ export const login = async (req, res) => {
     }
 }
 
+export const getAllUsers = async (req, res) => {
+    const userId = req.userId;
+
+    const users = await userService.getAllUsers(userId);
+
+    try {
+        const responseData = {
+            data: users.map(trimUserModel),
+            message: "Users fetched successfully",
+        };
+        res.json(responseData);
+    } catch (error) {
+        console.error(`Error fetching users: ${error}`);
+        res.status(500).json({ message: "An Error occured while fetching users." });
+    }
+}
 export const getProfile = async (req, res) => {
     const userId = req.userId;
 

@@ -1,3 +1,4 @@
+import 'package:converse/src/shared/shared.dart';
 import 'package:flutter/material.dart';
 
 class AppText extends StatelessWidget {
@@ -39,7 +40,7 @@ class AppText extends StatelessWidget {
     return Text(
       text,
       style: TextStyle(
-        color: color,
+        color: color ?? appColors.black,
         decoration: decoration,
         decorationStyle: decorationStyle,
         fontSize: fontSize,

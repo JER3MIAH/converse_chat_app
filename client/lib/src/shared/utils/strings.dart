@@ -13,3 +13,8 @@ const kRequestCancelledError = 'Request to server was cancelled.';
 //Message types
 const kTextType = 'TEXT';
 const kImageType = 'IMAGE';
+
+// socket events
+const JOIN_CHAT = 'JOIN_CHAT';
+const SEND_MESSAGE = 'SEND_MESSAGE';
+const RECEIVE_MESSAGE = 'RECEIVE_MESSAGE';

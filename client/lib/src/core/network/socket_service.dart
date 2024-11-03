@@ -61,11 +61,12 @@ class SocketService {
   }
 
   void onEvent(String event, Function(dynamic) callback) {
+    log("Listening for $event event...");
     _socket.on(event, (data) {
       try {
         callback(data);
-      } catch (e) {
-        log('Error handling event $event: $e');
+      } catch (e, stack) {
+        log('Error handling event $event: $e\n$stack');
       }
     });
   }

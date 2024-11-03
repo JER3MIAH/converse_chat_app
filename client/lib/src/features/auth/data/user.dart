@@ -27,15 +27,15 @@ class User {
     return <String, dynamic>{
       'id': id,
       'email': email,
-      'username': username,
+      if (username.isNotEmpty) 'username': username,
     };
   }
 
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
-      id: map['id'] as String,
+      id: map['id'] ?? map['userId'] as String,
       email: map['email'] as String,
-      username: map['username'] as String,
+      username: map['username'] ?? '',
     );
   }
 

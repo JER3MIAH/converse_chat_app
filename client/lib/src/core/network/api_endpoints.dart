@@ -1,4 +1,4 @@
-const baseUrl = 'http://192.168.36.142:5050'; //TODO:
+const baseUrl = 'http://YOUR_IP_ADDDRESS:5050';
 const apiVersion = 'api';
 
 final authEndpoints = _AuthEndpoints();
@@ -8,10 +8,12 @@ class _AuthEndpoints {
   final login = '$baseUrl/$apiVersion/user/login';
   final signup = '$baseUrl/$apiVersion/user/signup';
   final saveFcmToken = '$baseUrl/$apiVersion/user/save-fcm-token';
-  // final resetPassword = '$baseUrl/$apiVersion/user/reset-password';
-  // final saveFcmToken = '$baseUrl/$apiVersion/user/save-fcm-token';
 }
 
 class _ChatEndpoints {
-  final getChats = '$baseUrl/$apiVersion/chat';
+  final getUsers = '$baseUrl/$apiVersion/user/get-all-users';
+  final getChats = '$baseUrl/$apiVersion/chat/get-chats';
+  final createChat = '$baseUrl/$apiVersion/chat/create-chat';
+  final createMessage = '$baseUrl/$apiVersion/chat/get-chats';
+  final getMessages = '$baseUrl/$apiVersion/chat/get-messages';
 }

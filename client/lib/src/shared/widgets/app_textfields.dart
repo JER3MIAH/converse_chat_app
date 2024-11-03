@@ -1,3 +1,4 @@
+import 'package:converse/src/shared/shared.dart';
 import 'package:flutter/material.dart';
 
 class AppTextField extends StatelessWidget {
@@ -98,6 +99,65 @@ class AppTextField extends StatelessWidget {
       onChanged: onChanged,
       onFieldSubmitted: onSubmitted,
       validator: validator,
+    );
+  }
+}
+
+class MiniTextField extends StatelessWidget {
+  final TextEditingController controller;
+  final TextInputType? keyboardType;
+  final Widget? suffixIcon;
+  final String hintText;
+  final TextStyle? hintStyle;
+  final double? height;
+  final EdgeInsetsGeometry? contentPadding;
+  final Color? borderColor;
+  final double? borderRadius;
+  final void Function(String)? onChanged;
+  final VoidCallback? onTap;
+  final String? Function(String?)? validator;
+  const MiniTextField({
+    super.key,
+    required this.controller,
+    this.keyboardType,
+    required this.hintText,
+    this.borderRadius,
+    this.height,
+    this.onChanged,
+    this.onTap,
+    this.validator,
+    this.suffixIcon,
+    this.hintStyle,
+    this.borderColor,
+    this.contentPadding,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: height,
+      decoration: BoxDecoration(
+        border: Border.all(
+            color: borderColor ?? appColors.grey80.withOpacity(0.5),
+            width: 0.7),
+        borderRadius: BorderRadius.circular(borderRadius ?? 14),
+      ),
+      child: Center(
+        child: TextFormField(
+          validator: validator,
+          onTap: onTap,
+          controller: controller,
+          decoration: InputDecoration(
+            hintText: hintText,
+            hintStyle: hintStyle,
+            contentPadding:
+                contentPadding ?? EdgeInsets.symmetric(horizontal: 14.w),
+            suffix: suffixIcon,
+          ),
+          onChanged: onChanged,
+          keyboardType: keyboardType,
+        ),
+      ),
     );
   }
 }

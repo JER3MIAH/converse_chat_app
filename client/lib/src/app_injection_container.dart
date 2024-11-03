@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'features/auth/auth_injection_container.dart';
 import 'features/auth/logic/token_repository.dart';
+import 'features/chat/chat_injection_container.dart';
 import 'features/notifications/notificatios_injection_container.dart';
 
 final sl = GetIt.instance;
@@ -29,6 +30,7 @@ class AppInjectionContainer {
     );
 
     await AuthInjectionContainer.init();
+    await ChatInjectionContainer.init();
     await NotificatiosInjectionContainer.init();
   }
 }
