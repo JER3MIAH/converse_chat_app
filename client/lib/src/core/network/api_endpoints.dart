@@ -1,4 +1,6 @@
-const baseUrl = 'http://YOUR_IP_ADDDRESS:5050';
+const YOUR_IP_ADDRESS = '';
+
+const baseUrl = 'http://$YOUR_IP_ADDRESS:5050'; //TODO:
 const apiVersion = 'api';
 
 final authEndpoints = _AuthEndpoints();

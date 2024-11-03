@@ -104,9 +104,17 @@ class ChatProvider extends ChangeNotifier {
         final newMessage = ChatMessage.fromMap(res);
         if (!_messages.contains(newMessage)) {
           _messages.add(newMessage);
+          notifyListeners();
         }
         callback();
-        notifyListeners();
+        //* Update the last message in the relevant chat
+        final chatIndex =
+            _chats.indexWhere((chat) => chat.id == newMessage.chatId);
+        if (chatIndex != -1) {
+          _chats[chatIndex] =
+              _chats[chatIndex].copyWith(lastMessage: newMessage);
+          notifyListeners();
+        }
       },
     );
   }

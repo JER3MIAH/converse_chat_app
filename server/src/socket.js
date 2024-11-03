@@ -12,7 +12,6 @@ io.on('connection', (socket) => {
         console.log(`User joined room: ${chatId}`);
     });
 
-    // Event to send a message to a room
     socket.on('SEND_MESSAGE', async (message) => {
         const chatId = message.chatId;
         console.log(`User: ${message.senderId} sent message: ${trimMessageModel(message)}`);

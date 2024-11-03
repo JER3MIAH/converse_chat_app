@@ -28,10 +28,13 @@ class ChatTile extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            AppText(
-              title,
-              fontSize: 15.sp,
-              fontWeight: FontWeight.w500,
+            Expanded(
+              child: AppText(
+                title,
+                fontSize: 15.sp,
+                fontWeight: FontWeight.w500,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             AppText(
               time,

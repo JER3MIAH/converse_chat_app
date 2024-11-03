@@ -39,4 +39,16 @@ class Chat {
 
   factory Chat.fromJson(String source) =>
       Chat.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  Chat copyWith({
+    String? id,
+    List<User>? participants,
+    ChatMessage? lastMessage,
+  }) {
+    return Chat(
+      id: id ?? this.id,
+      participants: participants ?? this.participants,
+      lastMessage: lastMessage ?? this.lastMessage,
+    );
+  }
 }

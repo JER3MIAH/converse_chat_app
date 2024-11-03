@@ -38,13 +38,21 @@ class HomeScreen extends HookConsumerWidget {
                 final chat = chatController.chats[index];
                 final title = chat.participants
                     .firstWhere(
-                      (chat) => chat.id != authManager.currentUser!.id,
+                      (user) => user.id != authManager.currentUser!.id,
                     )
                     .email;
+                final sentByYou =
+                    chat.lastMessage?.senderId == authManager.currentUser!.id;
                 return ChatTile(
                   title: title,
-                  subtitle: '',
-                  time: 'time',
+                  subtitle: chat.lastMessage != null
+                      ? ('${sentByYou ? 'You: ' : ''}${chat.lastMessage!.text}')
+                      : '',
+                  time: chat.lastMessage != null
+                      ? formatDate(chat.lastMessage!.createdAt,
+                          format: 'hh:mm a')
+                      : '',
+                  unreadMessages: 0,
                   onTap: () {
                     AppNavigator.pushNamed(
                       ChatRoutes.chat,
