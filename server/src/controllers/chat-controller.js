@@ -2,6 +2,7 @@ import { trimChatModel, trimMessageModel, trimUserModel } from "../utils/trimmer
 import * as chatService from "../services/chat-service.js";
 import User from "../models/User.js";
 import mongoose from "mongoose";
+import Message from "../models/Message.js";
 
 
 
@@ -18,10 +19,14 @@ export const getChats = async (req, res) => {
                     return user;
                 })
             );
+            const lastMessage = await Message.findOne({ chatId: chat.id })
+                .sort({ createdAt: -1 })
+                .limit(1);
 
             return {
                 ...chat.toObject(),
                 participants: populatedParticipants.map(trimUserModel),
+                lastMessage: lastMessage ? trimMessageModel(lastMessage) : null,
             };
         })
     );
@@ -46,7 +51,7 @@ export const createChat = async (req, res) => {
         return userObjId;
     });
     console.log(`participants: ${participantsList} with type ${typeof participantsList[0]}`);
-    
+
     const userDetails = participants.map(participant => ({
         userId: participant.id,
         email: participant.email,
