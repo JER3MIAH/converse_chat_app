@@ -18,13 +18,16 @@ io.on('connection', (socket) => {
 
         try {
             const newMessage = await chatService.createMessage(message);
-            // Emit the message back to the sender
+            //* Emit the message back to the sender
             socket.emit('RECEIVE_MESSAGE', trimMessageModel(newMessage));
 
-            socket.to(chatId).emit('RECEIVE_MESSAGE', trimMessageModel(newMessage));
+            const receiverId = newMessage.receiverId;
+
+            //* Emit message to chat room and receiver's unique room
+            socket.to([chatId, receiverId]).emit('RECEIVE_MESSAGE', trimMessageModel(newMessage));
         } catch (error) {
             console.error(`Error sending message in chat ${chatId}:`, error);
-            // socket.emit('ERROR', { message: 'Failed to send message' });
+            //* socket.emit('ERROR', { message: 'Failed to send message' });
         }
 
     });

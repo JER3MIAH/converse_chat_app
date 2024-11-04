@@ -5,6 +5,7 @@ class ChatMessage {
   String chatId;
   String text;
   String senderId;
+  String receiverId;
   DateTime? createdAt;
   DateTime? updatedAt;
 
@@ -13,6 +14,7 @@ class ChatMessage {
     required this.chatId,
     required this.text,
     required this.senderId,
+    required this.receiverId,
     this.createdAt,
     this.updatedAt,
   });
@@ -22,6 +24,7 @@ class ChatMessage {
     String? chatId,
     String? text,
     String? senderId,
+    String? receiverId,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -30,6 +33,7 @@ class ChatMessage {
       chatId: chatId ?? this.chatId,
       text: text ?? this.text,
       senderId: senderId ?? this.senderId,
+      receiverId: receiverId ?? this.receiverId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -41,6 +45,7 @@ class ChatMessage {
       'chatId': chatId,
       'text': text,
       'senderId': senderId,
+      'receiverId': receiverId,
       // 'createdAt': createdAt.toIso8601String(),
       // 'updatedAt': updatedAt?.toIso8601String(),
     };
@@ -52,6 +57,7 @@ class ChatMessage {
       chatId: map['chatId'] as String,
       text: map['text'] as String,
       senderId: map['senderId'] as String,
+      receiverId: map['receiverId'] as String,
       createdAt: DateTime.parse(map['createdAt'] as String),
       updatedAt: map['updatedAt'] == null
           ? null

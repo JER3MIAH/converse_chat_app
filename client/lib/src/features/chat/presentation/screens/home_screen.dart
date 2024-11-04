@@ -22,6 +22,7 @@ class HomeScreen extends HookConsumerWidget {
       sl<AuthService>().saveFcmToken();
       sl<SocketService>().initializeSocket();
       ref.read(chatProvider.notifier).getChats();
+      ref.read(chatProvider.notifier).listenForNewMessage();
       return null;
     }, const []);
 

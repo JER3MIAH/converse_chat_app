@@ -115,6 +115,7 @@ class MiniTextField extends StatelessWidget {
   final double? borderRadius;
   final void Function(String)? onChanged;
   final VoidCallback? onTap;
+  final void Function(String)? onSubmitted;
   final String? Function(String?)? validator;
   const MiniTextField({
     super.key,
@@ -125,6 +126,7 @@ class MiniTextField extends StatelessWidget {
     this.height,
     this.onChanged,
     this.onTap,
+    this.onSubmitted,
     this.validator,
     this.suffixIcon,
     this.hintStyle,
@@ -146,6 +148,7 @@ class MiniTextField extends StatelessWidget {
         child: TextFormField(
           validator: validator,
           onTap: onTap,
+          onFieldSubmitted: onSubmitted,
           controller: controller,
           decoration: InputDecoration(
             hintText: hintText,

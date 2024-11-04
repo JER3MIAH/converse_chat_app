@@ -96,17 +96,18 @@ class ChatProvider extends ChangeNotifier {
     });
   }
 
-  void listenForNewMessage(VoidCallback callback) {
+  void listenForNewMessage({VoidCallback? callback}) {
     socketService.onEvent(
       RECEIVE_MESSAGE,
       (res) {
         log('got new message: $res');
+        if (_messages.isEmpty) getChats();
         final newMessage = ChatMessage.fromMap(res);
         if (!_messages.contains(newMessage)) {
           _messages.add(newMessage);
           notifyListeners();
         }
-        callback();
+        if (callback != null) callback();
         //* Update the last message in the relevant chat
         final chatIndex =
             _chats.indexWhere((chat) => chat.id == newMessage.chatId);

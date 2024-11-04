@@ -22,6 +22,7 @@ export const trimMessageModel = (message) => {
         id: message._id,
         chatId: message.chatId,
         senderId: message.senderId,
+        receiverId: message.receiverId,
         text: message.text,
         createdAt: message.createdAt,
         updatedAt: message.updatedAt || null,

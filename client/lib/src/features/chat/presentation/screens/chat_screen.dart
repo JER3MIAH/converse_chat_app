@@ -1,3 +1,4 @@
+import 'package:converse/src/features/auth/data/user.dart';
 import 'package:converse/src/features/chat/data/models.dart';
 import 'package:converse/src/features/chat/logic/providers/chat_provider.dart';
 import 'package:converse/src/features/navigation/app_navigator.dart';
@@ -50,7 +51,9 @@ class ChatScreen extends HookConsumerWidget {
 
       //* Listen for messages in this room
       ref.read(chatProvider.notifier).joinRoom(args.chat.id);
-      ref.read(chatProvider.notifier).listenForNewMessage(scrollToBottom);
+      ref
+          .read(chatProvider.notifier)
+          .listenForNewMessage(callback: scrollToBottom);
       scrollToBottom();
     }
 
@@ -58,6 +61,23 @@ class ChatScreen extends HookConsumerWidget {
       init();
       return null;
     }, const []);
+
+    void sendMessage() {
+      final receiverId = args.chat.participants
+          .firstWhere((user) => user.id != authManager.currentUser!.id,
+              orElse: () => User.empty())
+          .id;
+      ref.read(chatProvider.notifier).sendMessage(
+            ChatMessage(
+              chatId: args.chat.id,
+              text: controller.text.trim(),
+              senderId: authManager.currentUser!.id,
+              receiverId: receiverId,
+            ),
+          );
+      controller.clear();
+      scrollToBottom();
+    }
 
     return PopScope(
       onPopInvokedWithResult: (didPop, __) {
@@ -140,21 +160,12 @@ class ChatScreen extends HookConsumerWidget {
                   hintText: 'Message',
                   borderRadius: 8,
                   onTap: scrollToBottom,
+                  onSubmitted: (_) => sendMessage(),
                 ),
               ),
               XBox(10.w),
               GestureDetector(
-                onTap: () {
-                  ref.read(chatProvider.notifier).sendMessage(
-                        ChatMessage(
-                          chatId: args.chat.id,
-                          text: controller.text.trim(),
-                          senderId: authManager.currentUser!.id,
-                        ),
-                      );
-                  controller.clear();
-                  scrollToBottom();
-                },
+                onTap: sendMessage,
                 child: Container(
                   height: 44.h,
                   width: 44.w,

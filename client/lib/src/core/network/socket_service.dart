@@ -1,5 +1,7 @@
 import 'dart:developer';
 import 'package:converse/src/core/core.dart';
+import 'package:converse/src/features/navigation/redirect.dart';
+import 'package:converse/src/shared/shared.dart';
 // ignore: library_prefixes
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
@@ -31,6 +33,7 @@ class SocketService {
     _socket.onConnect((_) {
       log('Connected to WebSocket server $baseUrl');
       _listenForPing();
+      _joinPersonalRoom();
     });
 
     _socket.onReconnectAttempt((attemptNumber) {
@@ -58,6 +61,12 @@ class SocketService {
     onEvent('PING', (data) {
       log('Received ping from server with data: $data');
     });
+  }
+
+  void _joinPersonalRoom() {
+    final userId = authManager.currentUser!.id;
+    _socket.emit(JOIN_CHAT, userId);
+    log('Joined personal room');
   }
 
   void onEvent(String event, Function(dynamic) callback) {

@@ -11,6 +11,11 @@ class User {
     required this.username,
   });
 
+  User.empty()
+      : id = '',
+        email = '',
+        username = '';
+
   User copyWith({
     String? id,
     String? email,
