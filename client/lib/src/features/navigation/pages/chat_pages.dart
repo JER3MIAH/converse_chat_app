@@ -1,4 +1,4 @@
-import 'package:converse/src/features/chat/presentation/screens/chat_screen.dart';
+import 'package:converse/src/features/chat/presentation/screens/chat/chat_screen.dart';
 import 'package:converse/src/features/navigation/routes.dart';
 import 'package:get/get.dart';
 

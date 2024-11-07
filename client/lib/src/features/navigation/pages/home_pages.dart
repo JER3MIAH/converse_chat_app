@@ -1,5 +1,5 @@
-import 'package:converse/src/features/chat/presentation/screens/home_screen.dart';
-import 'package:converse/src/features/chat/presentation/screens/users_screen.dart';
+import 'package:converse/src/features/chat/presentation/screens/home/home_screen.dart';
+import 'package:converse/src/features/chat/presentation/screens/users/users_screen.dart';
 import 'package:converse/src/features/navigation/redirect.dart';
 import 'package:converse/src/features/navigation/routes.dart';
 import 'package:get/get.dart';

@@ -1,4 +1,3 @@
-import 'package:converse/src/shared/shared.dart';
 import 'package:flutter/material.dart';
 
 class AppText extends StatelessWidget {
@@ -37,10 +36,11 @@ class AppText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context).colorScheme;
     return Text(
       text,
       style: TextStyle(
-        color: color ?? appColors.black,
+        color: color ?? theme.onSurface,
         decoration: decoration,
         decorationStyle: decorationStyle,
         fontSize: fontSize,

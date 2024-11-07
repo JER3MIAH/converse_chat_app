@@ -1,10 +1,9 @@
+import 'package:converse/src/features/chat/presentation/widgets/profile_image_container.dart';
 import 'package:converse/src/shared/shared.dart';
 import 'package:flutter/material.dart';
 
-import 'widgets.dart';
-
 class ChatTile extends StatelessWidget {
-  final String title, subtitle, photoUrl, time;
+  final String title, subtitle, avatar, time;
   final int unreadMessages;
   final VoidCallback onTap;
   const ChatTile({
@@ -12,7 +11,7 @@ class ChatTile extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.time,
-    this.photoUrl = '',
+    this.avatar = '',
     this.unreadMessages = 0,
     required this.onTap,
   });
@@ -21,7 +20,9 @@ class ChatTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: onTap,
-      leading: const ProfileImageContainer(),
+      leading: ProfileImageContainer(
+        icon: avatar,
+      ),
       contentPadding: EdgeInsets.symmetric(horizontal: 15.w),
       title: Padding(
         padding: EdgeInsets.only(bottom: 4.h),

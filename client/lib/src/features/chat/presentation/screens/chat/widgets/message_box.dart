@@ -29,13 +29,13 @@ class ChatBox extends StatelessWidget {
             crossAxisAlignment:
                 sentByYou ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
-              AppText(
-                sentByYou ? 'You' : sender,
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
-                color: appColors.black.withOpacity(.8),
-              ),
-              YBox(5.h),
+              // AppText(
+              //   sentByYou ? 'You' : sender,
+              //   fontSize: 14.sp,
+              //   fontWeight: FontWeight.w500,
+              //   color: appColors.black.withOpacity(.8),
+              // ),
+              // YBox(5.h),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
                 decoration: BoxDecoration(

@@ -108,6 +108,7 @@ class MiniTextField extends StatelessWidget {
   final TextInputType? keyboardType;
   final Widget? suffixIcon;
   final String hintText;
+  final bool isUnderlined;
   final TextStyle? hintStyle;
   final double? height;
   final EdgeInsetsGeometry? contentPadding;
@@ -132,18 +133,22 @@ class MiniTextField extends StatelessWidget {
     this.hintStyle,
     this.borderColor,
     this.contentPadding,
+    this.isUnderlined = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context).colorScheme;
     return Container(
       height: height,
-      decoration: BoxDecoration(
-        border: Border.all(
-            color: borderColor ?? appColors.grey80.withOpacity(0.5),
-            width: 0.7),
-        borderRadius: BorderRadius.circular(borderRadius ?? 14),
-      ),
+      decoration: isUnderlined
+          ? null
+          : BoxDecoration(
+              border: Border.all(
+                  color: borderColor ?? appColors.grey80.withOpacity(0.5),
+                  width: 0.7),
+              borderRadius: BorderRadius.circular(borderRadius ?? 14),
+            ),
       child: Center(
         child: TextFormField(
           validator: validator,
@@ -156,6 +161,13 @@ class MiniTextField extends StatelessWidget {
             contentPadding:
                 contentPadding ?? EdgeInsets.symmetric(horizontal: 14.w),
             suffix: suffixIcon,
+            border: UnderlineInputBorder( //TODO:
+                borderSide: isUnderlined
+                    ? BorderSide(
+                        width: .5,
+                        color: theme.secondary,
+                      )
+                    : BorderSide.none),
           ),
           onChanged: onChanged,
           keyboardType: keyboardType,

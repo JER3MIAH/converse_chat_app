@@ -1,6 +1,7 @@
 import 'package:converse/src/features/auth/data/user.dart';
 import 'package:converse/src/features/chat/data/models.dart';
 import 'package:converse/src/features/chat/logic/providers/chat_provider.dart';
+import 'package:converse/src/features/chat/presentation/widgets/profile_image_container.dart';
 import 'package:converse/src/features/navigation/app_navigator.dart';
 import 'package:converse/src/features/navigation/redirect.dart';
 import 'package:converse/src/shared/shared.dart';
@@ -8,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../widgets/widgets.dart';
+import 'widgets/message_box.dart';
 
 class ChatScreenArgs {
   final String title;
@@ -28,6 +29,7 @@ class ChatScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    final theme = Theme.of(context).colorScheme;
     final scrollController = useScrollController();
     final controller = useTextEditingController();
     final messages = ref.watch(chatProvider).messages;
@@ -92,22 +94,50 @@ class ChatScreen extends HookConsumerWidget {
             child: AppBar(
               surfaceTintColor: Colors.transparent,
               centerTitle: false,
-              leading: AppBackButton(
+              leading: GestureDetector(
                 onTap: () {
                   AppNavigator.popRoute();
                   ref.read(chatProvider.notifier).setMessages([]);
                 },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    AppBackButton(),
+                    XBox(3.w),
+                    ProfileImageContainer(
+                      height: 30.h,
+                      icon: args.chat.participants
+                          .firstWhere(
+                              (user) => user.id != authManager.currentUser!.id,
+                              orElse: () => User.empty())
+                          .avatar,
+                      padding: EdgeInsets.all(8.w),
+                    ),
+                  ],
+                ),
               ),
-              title: Row(
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Expanded(
-                    child: AppText(
-                      args.title,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Expanded(
+                        child: AppText(
+                          args.title,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
                   ),
+                  // if (online)
+                  //   AppText(
+                  //     'online',
+                  //     color: appColors.success,
+                  //     fontSize: 12.sp,
+                  //   ),
                 ],
               ),
             ),
@@ -119,8 +149,11 @@ class ChatScreen extends HookConsumerWidget {
             children: messages.isEmpty
                 ? [
                     Center(
-                      child: LottieAsset(
-                        assetPath: 'assets/jsons/noMessages.json',
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 70.h),
+                        child: LottieAsset(
+                          assetPath: 'assets/jsons/noMessages.json',
+                        ),
                       ),
                     ),
                   ]
@@ -131,7 +164,7 @@ class ChatScreen extends HookConsumerWidget {
                       return ChatBox(
                         sender: args.title,
                         time: formatDate(message.createdAt,
-                            format: 'MMM dd hh:mm'),
+                            format: 'MMM dd hh:mm a'),
                         chatText: message.text,
                         sentByYou:
                             message.senderId == authManager.currentUser!.id,
@@ -171,7 +204,7 @@ class ChatScreen extends HookConsumerWidget {
                   width: 44.w,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: appColors.blue,
+                    color: theme.primary,
                   ),
                   child: Icon(
                     Icons.send_outlined,

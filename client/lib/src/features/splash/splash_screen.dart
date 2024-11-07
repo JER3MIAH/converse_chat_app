@@ -1,4 +1,7 @@
 import 'package:converse/src/app_injection_container.dart';
+import 'package:converse/src/core/network/socket_service.dart';
+import 'package:converse/src/features/auth/logic/services/auth_service.dart';
+import 'package:converse/src/features/chat/logic/providers/chat_provider.dart';
 import 'package:converse/src/features/navigation/app_navigator.dart';
 import 'package:converse/src/features/navigation/redirect.dart';
 import 'package:converse/src/features/navigation/routes.dart';
@@ -19,6 +22,10 @@ class SplashScreen extends HookConsumerWidget {
       authManager.init();
       sl<NotificationService>().requestPermission();
       sl<NotificationService>().initInfo();
+      sl<SocketService>().initializeSocket();
+      sl<AuthService>().saveFcmToken();
+      ref.read(chatProvider.notifier).getAllUsers();
+      ref.read(chatProvider.notifier).getChats();
       Future.delayed(
         const Duration(milliseconds: 4000),
         () => AppNavigator.replaceAllNamed(HomeRoutes.home),

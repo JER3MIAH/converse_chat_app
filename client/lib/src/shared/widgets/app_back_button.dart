@@ -11,11 +11,13 @@ class AppBackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppInkWell(
+    final theme = Theme.of(context).colorScheme;
+    return GestureDetector(
       onTap: onTap ?? () => AppNavigator.popRoute(),
       child: Icon(
         Icons.keyboard_arrow_left,
         size: 21.w,
+        color: theme.onSurface,
       ),
     );
   }

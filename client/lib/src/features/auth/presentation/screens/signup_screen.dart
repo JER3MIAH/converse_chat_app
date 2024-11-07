@@ -13,6 +13,7 @@ class SignupScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+     final theme = Theme.of(context).colorScheme;
     final nameController = useTextEditingController();
     final emailController = useTextEditingController();
     final passwordController = useTextEditingController();
@@ -65,7 +66,7 @@ class SignupScreen extends HookConsumerWidget {
               children: [
                 TextSpan(
                   text: 'Log in',
-                  style: TextStyle(color: appColors.blue),
+                  style: TextStyle(color: theme.primary),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
                       AppNavigator.replaceNamed(AuthRoutes.login);

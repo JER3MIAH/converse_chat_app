@@ -53,7 +53,7 @@ class AppSnackBar {
             ? Text(
                 title,
                 style: TextStyle(
-                  color: appColors.grey,
+                  color: appColors.black,
                   fontWeight: FontWeight.w500,
                   fontSize: 18.sp,
                 ),
@@ -77,7 +77,7 @@ class AppSnackBar {
         messageText: Text(
           message,
           style: TextStyle(
-            color: appColors.grey,
+            color: appColors.black,
             fontWeight: FontWeight.w500,
             fontSize: 16.sp,
           ),
