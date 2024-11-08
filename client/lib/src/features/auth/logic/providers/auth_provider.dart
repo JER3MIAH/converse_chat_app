@@ -35,10 +35,12 @@ class AuthProvider extends ChangeNotifier {
     required String username,
     required String email,
     required String password,
+    required String avatar,
   }) async {
     setLoading(true);
     final res = await authService.signup(
-      SignUpRequest(username: username, email: email, password: password),
+      SignUpRequest(
+          username: username, email: email, avatar: avatar, password: password),
     );
     setLoading(false);
     return res.fold((failure) {

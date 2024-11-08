@@ -37,6 +37,7 @@ class AuthServiceImpl extends AuthService {
           User(
             username: responseModel.username,
             email: responseModel.email,
+            avatar: responseModel.avatar,
             id: responseModel.id,
           ));
       if (!success) {

@@ -1,3 +1,5 @@
+import 'package:converse/src/app_injection_container.dart';
+import 'package:converse/src/core/network/socket_service.dart';
 import 'package:converse/src/features/auth/data/user.dart';
 import 'package:converse/src/features/auth/logic/token_repository.dart';
 
@@ -35,5 +37,6 @@ class AuthSessionStateManager {
   Future<void> logout() async {
     await tokenRepository.updateToken(currentToken.copyWithToken(null));
     await init();
+    sl<SocketService>().dispose();
   }
 }

@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 final baseTheme = ThemeData.light();    
 
 ThemeData lightTheme = ThemeData(
-  textTheme: GoogleFonts.montserratTextTheme().copyWith(
+  textTheme: GoogleFonts.interTextTheme().copyWith(
     headlineMedium: TextStyle(
       fontSize: 25.sp,
       fontWeight: FontWeight.w700,
@@ -25,7 +25,7 @@ ThemeData lightTheme = ThemeData(
 );
 
 ThemeData darkTheme = ThemeData(
-  textTheme: GoogleFonts.montserratTextTheme().copyWith(
+  textTheme: GoogleFonts.interTextTheme().copyWith(
     headlineMedium: TextStyle(
       fontSize: 25.sp,
       fontWeight: FontWeight.w700,

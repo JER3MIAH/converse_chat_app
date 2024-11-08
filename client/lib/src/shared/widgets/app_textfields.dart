@@ -39,8 +39,8 @@ class AppTextField extends StatelessWidget {
     this.textInputAction = TextInputAction.done,
     this.maxLength = 50,
     this.maxLines = 1,
-    this.fillColor = Colors.white,
-    this.borderColor = Colors.grey,
+    this.fillColor,
+    this.borderColor,
     this.borderRadius = 10.0,
     this.fontSize,
     this.hintStyle,
@@ -58,6 +58,7 @@ class AppTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context).colorScheme;
     return TextFormField(
       controller: controller,
       obscureText: isPassword,
@@ -67,35 +68,45 @@ class AppTextField extends StatelessWidget {
       maxLines: maxLines,
       autofocus: autoFocus,
       readOnly: readOnly,
-      style: textStyle ?? TextStyle(fontSize: fontSize ?? 16.0),
-      decoration: decoration ??
-          InputDecoration(
-            hintText: hintText,
-            labelText: labelText,
-            hintStyle: hintStyle ?? const TextStyle(color: Colors.grey),
-            labelStyle: labelStyle ?? const TextStyle(color: Colors.blueGrey),
-            fillColor: fillColor,
-            filled: true,
-            prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
-            suffixIcon: suffixIcon != null ? Icon(suffixIcon) : null,
-            contentPadding: contentPadding,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(borderRadius),
-              borderSide: BorderSide(color: borderColor ?? Colors.grey),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(borderRadius),
-              borderSide: BorderSide(color: borderColor ?? Colors.blue),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(borderRadius),
-              borderSide: BorderSide(color: borderColor ?? Colors.grey),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(borderRadius),
-              borderSide: const BorderSide(color: Colors.red),
-            ),
+      style: textStyle ??
+          TextStyle(fontSize: fontSize ?? 16.0, color: theme.onSurface),
+      decoration: InputDecoration(
+        hintText: hintText,
+        labelText: labelText,
+        hintStyle: hintStyle ?? TextStyle(color: theme.onSurface),
+        labelStyle: labelStyle ?? TextStyle(color: theme.onSurface),
+        fillColor: fillColor,
+        filled: fillColor != null,
+        prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
+        suffixIcon: suffixIcon != null ? Icon(suffixIcon) : null,
+        contentPadding: contentPadding,
+        counterText: '',
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(borderRadius),
+          borderSide: BorderSide(
+            color: borderColor ?? appColors.coolGrey,
+            width: .5,
           ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(borderRadius),
+          borderSide: BorderSide(
+            color: borderColor ?? theme.primary,
+            width: .5,
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(borderRadius),
+          borderSide: BorderSide(
+            color: borderColor ?? appColors.coolGrey,
+            width: .5,
+          ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(borderRadius),
+          borderSide: BorderSide(color: appColors.error),
+        ),
+      ),
       onChanged: onChanged,
       onFieldSubmitted: onSubmitted,
       validator: validator,
@@ -138,7 +149,14 @@ class MiniTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context).colorScheme;
+    // final theme = Theme.of(context).colorScheme;
+    final border = UnderlineInputBorder(
+        borderSide: isUnderlined
+            ? BorderSide(
+                width: .5,
+                color: appColors.coolGrey,
+              )
+            : BorderSide.none);
     return Container(
       height: height,
       decoration: isUnderlined
@@ -161,13 +179,9 @@ class MiniTextField extends StatelessWidget {
             contentPadding:
                 contentPadding ?? EdgeInsets.symmetric(horizontal: 14.w),
             suffix: suffixIcon,
-            border: UnderlineInputBorder( //TODO:
-                borderSide: isUnderlined
-                    ? BorderSide(
-                        width: .5,
-                        color: theme.secondary,
-                      )
-                    : BorderSide.none),
+            border: border,
+            focusedBorder: border,
+            enabledBorder: border,
           ),
           onChanged: onChanged,
           keyboardType: keyboardType,

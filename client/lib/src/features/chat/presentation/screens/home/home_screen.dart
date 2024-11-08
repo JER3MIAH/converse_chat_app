@@ -1,7 +1,11 @@
+import 'package:converse/src/app_injection_container.dart';
+import 'package:converse/src/core/network/socket_service.dart';
+import 'package:converse/src/features/auth/logic/services/auth_service.dart';
 import 'package:converse/src/features/chat/data/models.dart';
 import 'package:converse/src/features/chat/logic/providers/chat_provider.dart';
 import 'package:converse/src/features/chat/presentation/screens/chat/chat_screen.dart';
 import 'package:converse/src/features/chat/presentation/screens/chat/widgets/chat_tile.dart';
+import 'package:converse/src/features/chat/presentation/screens/home/widgets/app_drawer.dart';
 import 'package:converse/src/features/chat/presentation/widgets/profile_image_container.dart';
 import 'package:converse/src/features/navigation/nav.dart';
 import 'package:converse/src/features/navigation/redirect.dart';
@@ -23,15 +27,20 @@ class HomeScreen extends HookConsumerWidget {
     final users = ref.watch(chatProvider).users;
 
     useEffect(() {
+      sl<SocketService>().initializeSocket();
+      sl<AuthService>().saveFcmToken();
+      ref.read(chatProvider.notifier).getAllUsers();
+      ref.read(chatProvider.notifier).getChats();
       ref.read(chatProvider.notifier).listenForNewMessage();
       return null;
     }, const []);
 
     return Scaffold(
+      drawer: AppDrawer(),
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: 170.h,
+            expandedHeight: users.isEmpty ? 0 : 170.h,
             pinned: true,
             centerTitle: false,
             title: AppText('Converse'),
@@ -48,53 +57,55 @@ class HomeScreen extends HookConsumerWidget {
                 ),
               ),
             ],
-            flexibleSpace: FlexibleSpaceBar(
-              // title: AppText('Converse'),
-              background: Padding(
-                padding: EdgeInsets.only(top: 30.h, left: 15.w),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      ProfileImageContainer(
-                        margin: EdgeInsets.only(right: 8.w),
-                        title: 'Search',
-                        onTap: () => AppNavigator.pushNamed(HomeRoutes.users),
+            flexibleSpace: users.isEmpty
+                ? null
+                : FlexibleSpaceBar(
+                    background: Padding(
+                      padding: EdgeInsets.only(top: 30.h, left: 15.w),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            ProfileImageContainer(
+                              margin: EdgeInsets.only(right: 8.w),
+                              title: 'Search',
+                              onTap: () =>
+                                  AppNavigator.pushNamed(HomeRoutes.users),
+                            ),
+                            ...List.generate(
+                              users.length,
+                              (index) {
+                                final user = users[index];
+                                return ProfileImageContainer(
+                                  margin: EdgeInsets.only(right: 8.w),
+                                  icon: user.avatar,
+                                  title: user.username,
+                                  onTap: () {
+                                    AppNavigator.pushNamed(
+                                      ChatRoutes.chat,
+                                      args: ChatScreenArgs(
+                                        title: user.email,
+                                        chat: Chat(
+                                          id: generateChatId(
+                                            id1: authManager.currentUser!.id,
+                                            id2: user.id,
+                                          ),
+                                          participants: [
+                                            authManager.currentUser!,
+                                            user,
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
-                      ...List.generate(
-                        users.length,
-                        (index) {
-                          final user = users[index];
-                          return ProfileImageContainer(
-                            margin: EdgeInsets.only(right: 8.w),
-                            icon: user.avatar,
-                            title: user.username,
-                            onTap: () {
-                              AppNavigator.pushNamed(
-                                ChatRoutes.chat,
-                                args: ChatScreenArgs(
-                                  title: user.email,
-                                  chat: Chat(
-                                    id: generateChatId(
-                                      id1: authManager.currentUser!.id,
-                                      id2: user.id,
-                                    ),
-                                    participants: [
-                                      authManager.currentUser!,
-                                      user,
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            ),
             bottom: PreferredSize(
               preferredSize: Size.fromHeight(.5),
               child: Container(
@@ -105,9 +116,27 @@ class HomeScreen extends HookConsumerWidget {
           ),
           if (chatController.chats.isEmpty)
             SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: Center(child: AppText('No chats available')),
+              child: Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  LottieAsset(assetPath: 'assets/jsons/noChats.json'),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      AppText(
+                        'No chats available',
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      YBox(10.h),
+                      AppButton(
+                        buttonSize: Size(200.w, 50.h),
+                        title: 'Start Chat',
+                        onTap: () => AppNavigator.pushNamed(HomeRoutes.users),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           SliverList(

@@ -18,3 +18,10 @@ const kImageType = 'IMAGE';
 const JOIN_CHAT = 'JOIN_CHAT';
 const SEND_MESSAGE = 'SEND_MESSAGE';
 const RECEIVE_MESSAGE = 'RECEIVE_MESSAGE';
+
+const AVATARS = [
+  'default',
+  'crown',
+  'fire',
+  'dj',
+];

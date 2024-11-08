@@ -8,7 +8,7 @@ class AppDialog {
       Dialog(
         insetPadding: EdgeInsets.symmetric(horizontal: 20.w),
         backgroundColor: bgColor ?? appColors.white,
-        shadowColor: appColors.white,
+        shadowColor: bgColor ?? appColors.white,
         child: content,
       ),
       barrierDismissible: false,

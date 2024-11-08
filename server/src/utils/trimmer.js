@@ -5,6 +5,7 @@ export const trimUserModel = (user) => {
     return {
         userId: user._id,
         username: user.username || null,
+        avatar: user.avatar,
         email: user.email,
     };
 };

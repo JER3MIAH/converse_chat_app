@@ -6,16 +6,21 @@ import { trimUserModel } from "../utils/trimmer.js";
 import * as userService from "../services/user-service.js";
 
 export const register = async (req, res) => {
-    const { username, email, password } = req.body;
+    const { username, email, avatar, password } = req.body;
     const saltRounds = 10;
 
     if (!username || !email || !password) {
         return res.status(404).json({ message: "username, email and password are required" });
     }
 
-    const existingUSer = await User.findOne({ email: email });
-    if (existingUSer) {
+    const existingEmail = await User.findOne({ email: email });
+    const existingUsername = await User.findOne({ username: username });
+    if (existingEmail) {
         return res.status(400).json({ message: "A user with this email already eists" });
+    }
+
+    if (existingUsername) {
+        return res.status(400).json({ message: "A user with this username already eists" });
     }
 
     try {
@@ -27,6 +32,7 @@ export const register = async (req, res) => {
             const newUser = new User({
                 username: username,
                 email: email,
+                avatar: avatar,
                 password: hash,
                 fcmToken: null,
             });
@@ -121,18 +127,19 @@ export const getProfile = async (req, res) => {
 }
 
 export const updateProfile = async (req, res) => {
-    const { username, email } = req.body;
+    const { username, email, avatar } = req.body;
     const userId = req.userId;
 
 
-    if (!username && !email) {
-        return res.status(400).json({ message: "At least one of 'username' or 'email' must be provided." });
+    if (!username && !email && !avatar) {
+        return res.status(400).json({ message: "At least one of 'username' or 'email' or 'avatar' must be provided." });
     }
 
     try {
         const updateData = {};
         if (username) updateData.username = username;
         if (email) updateData.email = email;
+        if (avatar) updateData.avatar = avatar;
 
 
         const updatedUser = await userService.updateUser(userId, updateData);

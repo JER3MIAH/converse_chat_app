@@ -7,6 +7,7 @@ class ProfileImageContainer extends StatelessWidget {
   final String? icon;
   final String? title;
   final VoidCallback? onTap;
+  final bool showFullTitle;
   const ProfileImageContainer({
     super.key,
     this.height,
@@ -15,6 +16,7 @@ class ProfileImageContainer extends StatelessWidget {
     this.icon,
     this.title,
     this.onTap,
+    this.showFullTitle = false,
   });
 
   @override
@@ -36,7 +38,10 @@ class ProfileImageContainer extends StatelessWidget {
                 color: theme.secondary,
               ),
               child: icon == null
-                  ? SvgAsset(path: searchIcon)
+                  ? SvgAsset(
+                      path: searchIcon,
+                      color: theme.onSurface,
+                    )
                   : Image.asset(
                       icon!.isEmpty ? 'default' : 'assets/pngs/$icon.png'),
             ),
@@ -46,7 +51,7 @@ class ProfileImageContainer extends StatelessWidget {
                 child: SizedBox(
                   width: height ?? 50.h,
                   child: AppText(
-                    title!.split(' ')[0],
+                    showFullTitle ? title! : title!.split(' ')[0],
                     fontSize: 13.sp,
                     textAlign: TextAlign.center,
                     fontWeight: FontWeight.w600,
