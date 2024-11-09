@@ -149,7 +149,7 @@ class MiniTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final theme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context).colorScheme;
     final border = UnderlineInputBorder(
         borderSide: isUnderlined
             ? BorderSide(
@@ -169,6 +169,7 @@ class MiniTextField extends StatelessWidget {
             ),
       child: Center(
         child: TextFormField(
+          style: TextStyle(fontSize: 16.sp, color: theme.onSurface),
           validator: validator,
           onTap: onTap,
           onFieldSubmitted: onSubmitted,

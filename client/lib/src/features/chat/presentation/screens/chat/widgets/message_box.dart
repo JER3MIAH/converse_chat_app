@@ -4,16 +4,24 @@ import 'package:flutter/material.dart';
 class ChatBox extends StatelessWidget {
   final String sender, time, chatText;
   final bool sentByYou;
+  final String replyTitle;
+  final String replySubtitle;
+  final bool isTagged;
   const ChatBox({
     super.key,
     required this.sender,
     required this.time,
     required this.chatText,
     required this.sentByYou,
+    this.isTagged = false,
+    this.replyTitle = '',
+    this.replySubtitle = '',
   });
 
   @override
   Widget build(BuildContext context) {
+    // final theme = Theme.of(context).colorScheme;
+
     return Row(
       mainAxisAlignment:
           sentByYou ? MainAxisAlignment.end : MainAxisAlignment.start,
@@ -47,11 +55,47 @@ class ChatBox extends StatelessWidget {
                     topRight: sentByYou ? Radius.zero : null,
                   ),
                 ),
-                child: AppText(
-                  chatText,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w400,
-                  color: sentByYou ? appColors.white : appColors.black,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (isTagged)
+                      Container(
+                        padding: EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: appColors.black.withOpacity(.2),
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border(
+                            left: BorderSide(width: 2, color: appColors.black),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            AppText(
+                              replyTitle,
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.bold,
+                              color: appColors.white,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            AppText(
+                              replySubtitle,
+                              fontSize: 11.sp,
+                              color: appColors.white,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                    AppText(
+                      chatText,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w400,
+                      color: sentByYou ? appColors.white : appColors.black,
+                    ),
+                  ],
                 ),
               ),
               AppText(

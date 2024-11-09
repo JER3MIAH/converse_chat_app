@@ -6,6 +6,7 @@ class ChatMessage {
   String text;
   String senderId;
   String receiverId;
+  String? repliedTo;
   DateTime? createdAt;
   DateTime? updatedAt;
 
@@ -15,6 +16,7 @@ class ChatMessage {
     required this.text,
     required this.senderId,
     required this.receiverId,
+    this.repliedTo,
     this.createdAt,
     this.updatedAt,
   });
@@ -25,6 +27,7 @@ class ChatMessage {
     String? text,
     String? senderId,
     String? receiverId,
+    String? repliedTo,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -34,10 +37,21 @@ class ChatMessage {
       text: text ?? this.text,
       senderId: senderId ?? this.senderId,
       receiverId: receiverId ?? this.receiverId,
+      repliedTo: repliedTo ?? this.repliedTo,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }
+
+   ChatMessage.empty()
+      : id = '',
+        chatId = '',
+        text = '',
+        senderId = '',
+        receiverId = '',
+        repliedTo = null,
+        createdAt = null,
+        updatedAt = null;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -46,6 +60,7 @@ class ChatMessage {
       'text': text,
       'senderId': senderId,
       'receiverId': receiverId,
+      if (repliedTo != null) 'repliedTo': repliedTo,
       // 'createdAt': createdAt.toIso8601String(),
       // 'updatedAt': updatedAt?.toIso8601String(),
     };
@@ -58,6 +73,7 @@ class ChatMessage {
       text: map['text'] as String,
       senderId: map['senderId'] as String,
       receiverId: map['receiverId'] as String,
+      repliedTo: map['repliedTo'],
       createdAt: DateTime.parse(map['createdAt'] as String),
       updatedAt: map['updatedAt'] == null
           ? null
