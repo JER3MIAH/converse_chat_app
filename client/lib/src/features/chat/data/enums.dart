@@ -1,0 +1,1 @@
+enum AppBarState { REGULAR, SEARCH, SELECTION }

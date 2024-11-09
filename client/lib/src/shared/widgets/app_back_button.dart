@@ -1,5 +1,4 @@
 import 'package:converse/src/features/navigation/nav.dart';
-import '../shared.dart';
 import 'package:flutter/material.dart';
 
 class AppBackButton extends StatelessWidget {
@@ -11,14 +10,8 @@ class AppBackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context).colorScheme;
-    return GestureDetector(
-      onTap: onTap ?? () => AppNavigator.popRoute(),
-      child: Icon(
-        Icons.keyboard_arrow_left,
-        size: 21.w,
-        color: theme.onSurface,
-      ),
+    return BackButton(
+      onPressed: onTap ?? () => AppNavigator.popRoute(),
     );
   }
 }

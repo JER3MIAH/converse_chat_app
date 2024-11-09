@@ -6,6 +6,7 @@ import 'package:dartz/dartz.dart';
 
 abstract class ChatService {
   Future<Either<Failure, List<Chat>>> getChats();
+  Future<Either<Failure, dynamic>> archiveChats(List<String> chatIds);
   Future<Either<Failure, dynamic>> deleteChats(List<String> chatIds);
   Future<Either<Failure, List<User>>> getAllUsers();
   Future<Either<Failure, List<ChatMessage>>> getMessages(String chatId);
@@ -59,17 +60,33 @@ class ChatServiceImpl extends ChatService {
   }
 
   @override
+  Future<Either<Failure, dynamic>> archiveChats(List<String> chatIds) async {
+    try {
+      final response = await client.patch(
+        chatEndpoints.archiveChats,
+        data: {"chatIds": chatIds},
+      );
+      log('archive chats response: $response');
+
+      return right(null);
+    } catch (err, stack) {
+      log('archive chats error: $err\n$stack');
+      return left(ApiFailure(message: err.toString()));
+    }
+  }
+
+  @override
   Future<Either<Failure, dynamic>> deleteChats(List<String> chatIds) async {
     try {
       final response = await client.delete(
         chatEndpoints.deleteChats,
         data: {"chatIds": chatIds},
       );
-      log('delete selected chats response: $response');
+      log('delete chats response: $response');
 
       return right(null);
     } catch (err, stack) {
-      log('delete selected chats error: $err\n$stack');
+      log('delete chats error: $err\n$stack');
       return left(ApiFailure(message: err.toString()));
     }
   }

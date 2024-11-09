@@ -2,6 +2,7 @@ import 'package:converse/src/features/chat/presentation/widgets/profile_image_co
 import 'package:converse/src/features/navigation/app_navigator.dart';
 import 'package:converse/src/features/navigation/redirect.dart';
 import 'package:converse/src/features/navigation/routes.dart';
+import 'package:converse/src/features/theme/logic/theme_provider.dart';
 import 'package:converse/src/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,6 +14,7 @@ class AppDrawer extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final theme = Theme.of(context).colorScheme;
     final currentUser = authManager.currentUser!;
+    final isDarkMode = ref.watch(themeProvider).isDarkMode;
     return Drawer(
       child: Column(
         children: [
@@ -32,11 +34,21 @@ class AppDrawer extends ConsumerWidget {
               color: theme.onPrimary,
             ),
             otherAccountsPictures: [
-              AppInkWell(
-                onTap: () {},
-                child: SvgAsset(
-                  path: editIcon,
-                  color: theme.onPrimary,
+              // AppInkWell(
+              //   onTap: () {},
+              //   child: SvgAsset(
+              //     path: editIcon,
+              //     color: theme.onPrimary,
+              //   ),
+              // ),
+              GestureDetector(
+                onTap: ref.read(themeProvider.notifier).toggleTheme,
+                child: Padding(
+                  padding: EdgeInsets.only(right: 10.w),
+                  child: SvgAsset(
+                    path: isDarkMode ? sunIcon : moonIcon,
+                    color: appColors.white,
+                  ),
                 ),
               ),
             ],
@@ -48,6 +60,14 @@ class AppDrawer extends ConsumerWidget {
             title: 'World Chat',
             icon: globeIcon,
             onTap: () {},
+          ),
+          _buildDrawerTile(
+            title: 'Archived Chats',
+            icon: Icons.archive,
+            onTap: () {
+              Scaffold.of(context).closeDrawer();
+              AppNavigator.pushNamed(ChatRoutes.archivedChats);
+            },
           ),
           Spacer(),
           _buildDrawerTile(
@@ -66,16 +86,21 @@ class AppDrawer extends ConsumerWidget {
 
   Widget _buildDrawerTile({
     required String title,
-    required String icon,
+    required dynamic icon,
     required VoidCallback onTap,
   }) {
     return ListTile(
       onTap: onTap,
       title: AppText(title),
-      leading: SvgAsset(
-        path: icon,
-        color: appColors.coolGrey,
-      ),
+      leading: icon is IconData
+          ? Icon(
+              icon,
+              color: appColors.coolGrey,
+            )
+          : SvgAsset(
+              path: icon,
+              color: appColors.coolGrey,
+            ),
     );
   }
 }

@@ -36,8 +36,10 @@ class ChatProvider extends ChangeNotifier {
   final List<Chat> _selectedChats = [];
   List<Chat> get selectedChats => _selectedChats;
 
-  // final List<Chat> _archivedChats = [];
-  // List<Chat> get archivedChats => _archivedChats;
+  List<Chat> get archivedChats =>
+      _chats.where((chat) => chat.isArchived).toList();
+  List<Chat> get unarchivedChats =>
+      _chats.where((chat) => !chat.isArchived).toList();
 
   List<ChatMessage> _messages = [];
   List<ChatMessage> get messages => _messages;
@@ -75,9 +77,9 @@ class ChatProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void clearSelectedChats() {
+  void clearSelectedChats({bool updateState = true}) {
     _selectedChats.clear();
-    notifyListeners();
+    if (updateState) notifyListeners();
   }
 
   // void archiveChats(List<Chat> value) {
@@ -107,6 +109,24 @@ class ChatProvider extends ChangeNotifier {
     });
   }
 
+  Future<bool> archiveSelectedChats() async {
+    for (var i = 0; i < _chats.length; i++) {
+      _chats[i] = _chats[i].copyWith(isArchived: !_chats[i].isArchived);
+    }
+    notifyListeners();
+    final res = await chatService.archiveChats(
+      _selectedChats.map((e) => e.id).toList(),
+    );
+    _selectedChats.clear();
+    return res.fold((failure) {
+      setErrorMessage(failure.message);
+      return false;
+    }, (_) {
+      getChats();
+      return true;
+    });
+  }
+
   Future<bool> deleteSelectedChats() async {
     _chats.removeWhere((chat) => _selectedChats.contains(chat));
     notifyListeners();
@@ -114,6 +134,23 @@ class ChatProvider extends ChangeNotifier {
       _selectedChats.map((e) => e.id).toList(),
     );
     _selectedChats.clear();
+    return res.fold((failure) {
+      setErrorMessage(failure.message);
+      return false;
+    }, (_) {
+      getChats();
+      return true;
+    });
+  }
+
+  Future<bool> archiveChat(Chat chat) async {
+    int index = _chats.indexOf(chat);
+    _chats[index] =
+        _chats[index].copyWith(isArchived: !_chats[index].isArchived);
+    notifyListeners();
+    final res = await chatService.archiveChats(
+      [chat.id],
+    );
     return res.fold((failure) {
       setErrorMessage(failure.message);
       return false;

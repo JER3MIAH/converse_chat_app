@@ -19,6 +19,12 @@ export const getChat = async (chatId, userId) => {
     return await Chat.findOne({ id: chatId });
 };
 
+export const archiveChat = async (chatId) => {
+    const chat = await getChat(chatId);
+    const value = chat.isArchived;
+    return await Chat.findByIdAndUpdate(chat._id, { isArchived: !value });
+}
+
 export const deleteChat = async (chatId, userId) => {
     const chat = await getChat(chatId);
     if (!chat) {

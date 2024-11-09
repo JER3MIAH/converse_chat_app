@@ -92,6 +92,28 @@ export const createChat = async (req, res) => {
     }
 }
 
+export const archiveChats = async (req, res) => {
+    const { chatIds } = req.body;
+
+    if (!chatIds || chatIds.length == 0) {
+        return res.status(500).json({ message: "chatIds is required" });
+    }
+
+    try {
+        const selectedChats = await chatService.getChatsByIds(chatIds);
+        await Promise.all(selectedChats.map(async (chat) => {
+            await chatService.archiveChat(chat.id);
+        }));
+        const responseData = {
+            message: "Chats archived successfully",
+        };
+        res.json(responseData);
+    } catch (error) {
+        console.error(`Error archiving chats: ${error}`);
+        res.status(500).json({ message: "An Error occured while archiving chats." });
+    }
+}
+
 export const deleteChats = async (req, res) => {
     const userId = req.userId;
     const { chatIds } = req.body;
@@ -102,7 +124,7 @@ export const deleteChats = async (req, res) => {
 
     try {
         const selectedChats = await chatService.getChatsByIds(chatIds);
-        const x = await Promise.all(selectedChats.map(async (chat) => {
+        await Promise.all(selectedChats.map(async (chat) => {
             await chatService.deleteChat(chat.id, userId);
         }));
         const responseData = {

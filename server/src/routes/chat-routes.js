@@ -5,6 +5,7 @@ import { authMiddleware } from "../middlewares/auth-middleware.js";
 const router = express.Router();
 
 router.get('/get-chats', authMiddleware, chatController.getChats);
+router.patch('/archive-chats', authMiddleware, chatController.archiveChats);
 router.delete('/delete-chats', authMiddleware, chatController.deleteChats);
 router.post('/create-chat', authMiddleware, chatController.createChat);
 router.get('/get-messages', authMiddleware, chatController.getMessages);

@@ -17,6 +17,7 @@ class HomeRoutes {
 class ChatRoutes {
   static const chat = '/chatScreen';
   static const worldChat = '/worldChatScreen';
+  static const archivedChats = '/archivedChatsScreen';
 }
 
 class SettingsRoutes {

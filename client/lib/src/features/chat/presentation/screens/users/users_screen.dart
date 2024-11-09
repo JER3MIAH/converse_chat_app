@@ -48,15 +48,7 @@ class AllUsersScreen extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        leading: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: AppInkWell(
-            onTap: () {
-              AppNavigator.popRoute();
-            },
-            child: AppBackButton(),
-          ),
-        ),
+        leading: AppBackButton(),
         title: MiniTextField(
           isUnderlined: true,
           hintText: 'Search a user',

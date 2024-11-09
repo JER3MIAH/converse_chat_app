@@ -93,54 +93,48 @@ class ChatScreen extends HookConsumerWidget {
             padding: EdgeInsets.symmetric(horizontal: 15.w),
             child: AppBar(
               surfaceTintColor: Colors.transparent,
-              centerTitle: true,
-              leading: GestureDetector(
+              centerTitle: false,
+              leading: AppBackButton(
                 onTap: () {
                   AppNavigator.popRoute();
                   ref.read(chatProvider.notifier).setMessages([]);
                 },
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    AppBackButton(),
-                    XBox(3.w),
-                    Expanded(
-                      child: ProfileImageContainer(
-                        height: 30.h,
-                        icon: args.chat.participants
-                            .firstWhere(
-                                (user) =>
-                                    user.id != authManager.currentUser!.id,
-                                orElse: () => User.empty())
-                            .avatar,
-                        padding: EdgeInsets.all(8.w),
-                      ),
-                    ),
-                  ],
-                ),
               ),
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              title: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Row(
+                  ProfileImageContainer(
+                    height: 30.h,
+                    icon: args.chat.participants
+                        .firstWhere(
+                            (user) => user.id != authManager.currentUser!.id,
+                            orElse: () => User.empty())
+                        .avatar,
+                    padding: EdgeInsets.all(8.w),
+                  ),
+                  XBox(5.w),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Expanded(
-                        child: AppText(
-                          args.title,
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          AppText(
+                            args.title,
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ],
                       ),
+                      // if (online)
+                      //   AppText(
+                      //     'online',
+                      //     color: appColors.success,
+                      //     fontSize: 12.sp,
+                      //   ),
                     ],
                   ),
-                  // if (online)
-                  //   AppText(
-                  //     'online',
-                  //     color: appColors.success,
-                  //     fontSize: 12.sp,
-                  //   ),
                 ],
               ),
             ),

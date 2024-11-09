@@ -6,11 +6,13 @@ class Chat {
   final String id;
   final List<User> participants;
   final ChatMessage? lastMessage;
+  final bool isArchived;
 
   Chat({
     required this.id,
     required this.participants,
     this.lastMessage,
+    this.isArchived = false,
   });
 
   Map<String, dynamic> toMap() {
@@ -18,6 +20,7 @@ class Chat {
       'id': id,
       'participants': participants.map((x) => x.toMap()).toList(),
       if (lastMessage != null) 'lastMessage': lastMessage?.toMap(),
+      'isArchived': isArchived,
     };
   }
 
@@ -32,6 +35,7 @@ class Chat {
       lastMessage: map['lastMessage'] == null
           ? null
           : ChatMessage.fromMap(map['lastMessage'] as Map<String, dynamic>),
+      isArchived: map['isArchived'],
     );
   }
 
@@ -44,11 +48,13 @@ class Chat {
     String? id,
     List<User>? participants,
     ChatMessage? lastMessage,
+    bool? isArchived,
   }) {
     return Chat(
       id: id ?? this.id,
       participants: participants ?? this.participants,
       lastMessage: lastMessage ?? this.lastMessage,
+      isArchived: isArchived ?? this.isArchived,
     );
   }
 }
