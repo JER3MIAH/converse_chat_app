@@ -6,6 +6,8 @@ class ChatTile extends StatelessWidget {
   final String title, subtitle, avatar, time;
   final int unreadMessages;
   final VoidCallback onTap;
+  final VoidCallback? onLongPress;
+  final bool isSelected;
   const ChatTile({
     super.key,
     required this.title,
@@ -14,14 +16,18 @@ class ChatTile extends StatelessWidget {
     this.avatar = '',
     this.unreadMessages = 0,
     required this.onTap,
+    this.onLongPress,
+    this.isSelected = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       onTap: onTap,
+      onLongPress: onLongPress,
       leading: ProfileImageContainer(
         icon: avatar,
+        isSelected: isSelected,
       ),
       contentPadding: EdgeInsets.symmetric(horizontal: 15.w),
       title: Padding(

@@ -1,14 +1,50 @@
 import Chat from "../models/Chat.js";
 import Message from "../models/Message.js";
 import mongoose from "mongoose";
+import { areArraysEqual } from "../utils/helper_funcs.js";
 
 export const getChats = async (userId) => {
     const userObjId = new mongoose.Types.ObjectId(`${userId}`);
-    return await Chat.find({ participants: { $in: [userObjId] } });
+    return await Chat.find({
+        participants: { $in: [userObjId] },
+        deletedBy: { $ne: userId }
+    });
 };
 
-export const getChat = async (chatId) => {
+export const getChat = async (chatId, userId) => {
+    await Chat.updateOne(
+        { id: chatId, deletedBy: userId },
+        { $pull: { deletedBy: userId } }
+    );
     return await Chat.findOne({ id: chatId });
+};
+
+export const deleteChat = async (chatId, userId) => {
+    const chat = await getChat(chatId);
+    if (!chat) {
+        throw new Error("Chat not found");
+    }
+    if (areArraysEqual(chat.deletedBy, chat.participants.map(user => user.toString()))) {
+        await Message.deleteMany({ chatId: chatId });
+        return await Chat.findOneAndDelete({ id: chatId });
+    }
+    if (chat.deletedBy.includes(userId)) {
+        return;
+    }
+    await Chat.updateOne(
+        { id: chatId },
+        { $addToSet: { deletedBy: userId } }
+    );
+
+    //* Update the deletedBy field for all messages in the chat
+    await Message.updateMany(
+        { chatId: chatId },
+        { $addToSet: { deletedBy: userId } }
+    );
+};
+
+export const getChatsByIds = async (chatIds) => {
+    return await Chat.find({ id: { $in: chatIds } });
 };
 
 export const createChat = async (chatData) => {
@@ -16,8 +52,11 @@ export const createChat = async (chatData) => {
     return await chat.save();
 };
 
-export const getMessages = async (chatId) => {
-    return await Message.find({ chatId: chatId });
+export const getMessages = async (chatId, userId) => {
+    return await Message.find({
+        chatId: chatId,
+        deletedBy: { $ne: userId }
+    });
 };
 
 export const createMessage = async (messageData) => {

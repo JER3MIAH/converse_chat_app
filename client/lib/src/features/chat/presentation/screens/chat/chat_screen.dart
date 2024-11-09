@@ -93,7 +93,7 @@ class ChatScreen extends HookConsumerWidget {
             padding: EdgeInsets.symmetric(horizontal: 15.w),
             child: AppBar(
               surfaceTintColor: Colors.transparent,
-              centerTitle: false,
+              centerTitle: true,
               leading: GestureDetector(
                 onTap: () {
                   AppNavigator.popRoute();
@@ -104,14 +104,17 @@ class ChatScreen extends HookConsumerWidget {
                   children: [
                     AppBackButton(),
                     XBox(3.w),
-                    ProfileImageContainer(
-                      height: 30.h,
-                      icon: args.chat.participants
-                          .firstWhere(
-                              (user) => user.id != authManager.currentUser!.id,
-                              orElse: () => User.empty())
-                          .avatar,
-                      padding: EdgeInsets.all(8.w),
+                    Expanded(
+                      child: ProfileImageContainer(
+                        height: 30.h,
+                        icon: args.chat.participants
+                            .firstWhere(
+                                (user) =>
+                                    user.id != authManager.currentUser!.id,
+                                orElse: () => User.empty())
+                            .avatar,
+                        padding: EdgeInsets.all(8.w),
+                      ),
                     ),
                   ],
                 ),

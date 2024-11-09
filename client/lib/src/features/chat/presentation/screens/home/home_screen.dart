@@ -14,6 +14,7 @@ import 'package:converse/src/features/theme/logic/theme_provider.dart';
 import 'package:converse/src/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class HomeScreen extends HookConsumerWidget {
@@ -35,151 +36,220 @@ class HomeScreen extends HookConsumerWidget {
       return null;
     }, const []);
 
-    return Scaffold(
-      drawer: AppDrawer(),
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: users.isEmpty ? 0 : 170.h,
-            pinned: true,
-            centerTitle: false,
-            title: AppText('Converse'),
-            leading: DrawerButton(),
-            actions: [
-              GestureDetector(
-                onTap: ref.read(themeProvider.notifier).toggleTheme,
-                child: Padding(
-                  padding: EdgeInsets.only(right: 10.w),
-                  child: SvgAsset(
-                    path: isDarkMode ? sunIcon : moonIcon,
-                    color: theme.onSurface,
-                  ),
-                ),
-              ),
-            ],
-            flexibleSpace: users.isEmpty
-                ? null
-                : FlexibleSpaceBar(
-                    background: Padding(
-                      padding: EdgeInsets.only(top: 30.h, left: 15.w),
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            ProfileImageContainer(
-                              margin: EdgeInsets.only(right: 8.w),
-                              title: 'Search',
-                              onTap: () =>
-                                  AppNavigator.pushNamed(HomeRoutes.users),
-                            ),
-                            ...List.generate(
-                              users.length,
-                              (index) {
-                                final user = users[index];
-                                return ProfileImageContainer(
-                                  margin: EdgeInsets.only(right: 8.w),
-                                  icon: user.avatar,
-                                  title: user.username,
-                                  onTap: () {
-                                    AppNavigator.pushNamed(
-                                      ChatRoutes.chat,
-                                      args: ChatScreenArgs(
-                                        title: user.email,
-                                        chat: Chat(
-                                          id: generateChatId(
-                                            id1: authManager.currentUser!.id,
-                                            id2: user.id,
+    return PopScope(
+      canPop: chatController.selectedChats.isEmpty,
+      onPopInvokedWithResult: (didPop, __) {
+        ref.read(chatProvider.notifier).clearSelectedChats();
+      },
+      child: Scaffold(
+        drawer: AppDrawer(),
+        body: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              expandedHeight: users.isEmpty ? 0 : 170.h,
+              pinned: true,
+              centerTitle: false,
+              title: chatController.selectedChats.isNotEmpty
+                  ? AppText(
+                      '${chatController.selectedChats.length}',
+                      fontSize: 18.sp,
+                    )
+                  : AppText('Converse'),
+              leading: chatController.selectedChats.isNotEmpty
+                  ? IconButton(
+                      icon: Icon(
+                        Icons.clear,
+                        color: theme.onSurface,
+                      ),
+                      onPressed: () =>
+                          ref.read(chatProvider.notifier).clearSelectedChats(),
+                    )
+                  : DrawerButton(),
+              actions: chatController.selectedChats.isNotEmpty
+                  ? [
+                      IconButton(
+                        icon: Icon(
+                          Icons.delete_outline,
+                          color: theme.onSurface,
+                        ),
+                        onPressed: () => ref
+                            .read(chatProvider.notifier)
+                            .deleteSelectedChats(),
+                      ),
+                      // IconButton(
+                      //   icon: Icon(
+                      //     Icons.archive_outlined,
+                      //     color: theme.onSurface,
+                      //   ),
+                      //   onPressed: () {},
+                      // ),
+                    ]
+                  : [
+                      GestureDetector(
+                        onTap: ref.read(themeProvider.notifier).toggleTheme,
+                        child: Padding(
+                          padding: EdgeInsets.only(right: 10.w),
+                          child: SvgAsset(
+                            path: isDarkMode ? sunIcon : moonIcon,
+                            color: theme.onSurface,
+                          ),
+                        ),
+                      ),
+                    ],
+              flexibleSpace: users.isEmpty
+                  ? null
+                  : FlexibleSpaceBar(
+                      background: Padding(
+                        padding: EdgeInsets.only(top: 30.h, left: 15.w),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              ProfileImageContainer(
+                                margin: EdgeInsets.only(right: 8.w),
+                                title: 'Search',
+                                onTap: () =>
+                                    AppNavigator.pushNamed(HomeRoutes.users),
+                              ),
+                              ...List.generate(
+                                users.length,
+                                (index) {
+                                  final user = users[index];
+                                  return ProfileImageContainer(
+                                    margin: EdgeInsets.only(right: 8.w),
+                                    icon: user.avatar,
+                                    title: user.username,
+                                    onTap: () {
+                                      AppNavigator.pushNamed(
+                                        ChatRoutes.chat,
+                                        args: ChatScreenArgs(
+                                          title: user.email,
+                                          chat: Chat(
+                                            id: generateChatId(
+                                              id1: authManager.currentUser!.id,
+                                              id2: user.id,
+                                            ),
+                                            participants: [
+                                              authManager.currentUser!,
+                                              user,
+                                            ],
                                           ),
-                                          participants: [
-                                            authManager.currentUser!,
-                                            user,
-                                          ],
                                         ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                          ],
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-            bottom: PreferredSize(
-              preferredSize: Size.fromHeight(.5),
-              child: Container(
-                color: theme.secondary,
-                height: 1,
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(.5),
+                child: Container(
+                  color: theme.secondary,
+                  height: 1,
+                ),
               ),
             ),
-          ),
-          if (chatController.chats.isEmpty)
-            SliverToBoxAdapter(
-              child: Stack(
-                alignment: Alignment.bottomCenter,
-                children: [
-                  LottieAsset(assetPath: 'assets/jsons/noChats.json'),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      AppText(
-                        'No chats available',
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      YBox(10.h),
-                      AppButton(
-                        buttonSize: Size(200.w, 50.h),
-                        title: 'Start Chat',
-                        onTap: () => AppNavigator.pushNamed(HomeRoutes.users),
-                      ),
-                    ],
-                  ),
-                ],
+            if (chatController.chats.isEmpty)
+              SliverToBoxAdapter(
+                child: Stack(
+                  alignment: Alignment.bottomCenter,
+                  children: [
+                    LottieAsset(assetPath: 'assets/jsons/noChats.json'),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        AppText(
+                          'No chats available',
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        YBox(10.h),
+                        AppButton(
+                          buttonSize: Size(200.w, 50.h),
+                          title: 'Start Chat',
+                          onTap: () => AppNavigator.pushNamed(HomeRoutes.users),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                // return ListTile(
-                //   title: AppText('Ypppppppppppppp'),
-                // );
-                final chat = chatController.chats[index];
-                final user = chat.participants.firstWhere(
-                  (user) => user.id != authManager.currentUser!.id,
-                );
-                final title = user.username;
-                final sentByYou =
-                    chat.lastMessage?.senderId == authManager.currentUser!.id;
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  // return ListTile(
+                  //   title: AppText('Ypppppppppppppp'),
+                  // );
+                  final chat = chatController.chats[index];
+                  final user = chat.participants.firstWhere(
+                    (user) => user.id != authManager.currentUser!.id,
+                  );
+                  final title = user.username;
+                  final sentByYou =
+                      chat.lastMessage?.senderId == authManager.currentUser!.id;
 
-                return ChatTile(
-                  title: title,
-                  avatar: user.avatar,
-                  subtitle: chat.lastMessage != null
-                      ? ('${sentByYou ? 'You: ' : ''}${chat.lastMessage!.text}')
-                      : '',
-                  time: chat.lastMessage != null
-                      ? formatDate(chat.lastMessage!.createdAt,
-                          format: 'hh:mm a')
-                      : '',
-                  unreadMessages: 0,
-                  onTap: () {
-                    AppNavigator.pushNamed(
-                      ChatRoutes.chat,
-                      args: ChatScreenArgs(
-                        title: title,
-                        chat: chat,
+                  return Slidable(
+                    key: ValueKey(index),
+                    endActionPane: ActionPane(
+                      extentRatio: .2,
+                      motion: ScrollMotion(),
+                      dismissible: DismissiblePane(
+                        dismissThreshold: 0.4,
+                        onDismissed: () {
+                          ref.read(chatProvider.notifier).deleteChat(chat);
+                        },
                       ),
-                    );
-                  },
-                );
-              },
-              // childCount: 30,
-              childCount: chatController.chats.length,
+                      children: [
+                        SlidableAction(
+                          onPressed: (_) {
+                            ref.read(chatProvider.notifier).deleteChat(chat);
+                          },
+                          backgroundColor: appColors.error.withOpacity(.2),
+                          foregroundColor: appColors.error,
+                          icon: Icons.delete,
+                        ),
+                      ],
+                    ),
+                    child: ChatTile(
+                      title: title,
+                      avatar: user.avatar,
+                      subtitle: chat.lastMessage != null
+                          ? ('${sentByYou ? 'You: ' : ''}${chat.lastMessage!.text}')
+                          : '',
+                      time: chat.lastMessage != null
+                          ? formatDate(chat.lastMessage!.createdAt,
+                              format: 'hh:mm a')
+                          : '',
+                      isSelected: chatController.selectedChats.contains(chat),
+                      unreadMessages: 0,
+                      onLongPress: () =>
+                          ref.read(chatProvider.notifier).selectChat(chat),
+                      onTap: () {
+                        if (chatController.selectedChats.isNotEmpty) {
+                          ref.read(chatProvider.notifier).selectChat(chat);
+                          return;
+                        }
+                        AppNavigator.pushNamed(
+                          ChatRoutes.chat,
+                          args: ChatScreenArgs(
+                            title: title,
+                            chat: chat,
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+                // childCount: 30,
+                childCount: chatController.chats.length,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

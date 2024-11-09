@@ -44,6 +44,7 @@ export const getChats = async (req, res) => {
 }
 
 export const createChat = async (req, res) => {
+    const userId = req.userId;
     const { id, participants, lastMessage } = req.body;
 
     const participantsList = participants.map(participant => {
@@ -64,7 +65,7 @@ export const createChat = async (req, res) => {
         lastMessage: lastMessage,
     };
 
-    const existingChat = await chatService.getChat(id);
+    const existingChat = await chatService.getChat(id, userId);
     if (existingChat) {
         return res.json({
             data: {
@@ -91,14 +92,38 @@ export const createChat = async (req, res) => {
     }
 }
 
+export const deleteChats = async (req, res) => {
+    const userId = req.userId;
+    const { chatIds } = req.body;
+
+    if (!chatIds || chatIds.length == 0) {
+        return res.status(500).json({ message: "chatIds is required" });
+    }
+
+    try {
+        const selectedChats = await chatService.getChatsByIds(chatIds);
+        const x = await Promise.all(selectedChats.map(async (chat) => {
+            await chatService.deleteChat(chat.id, userId);
+        }));
+        const responseData = {
+            message: "Chats deleted successfully",
+        };
+        res.json(responseData);
+    } catch (error) {
+        console.error(`Error fetching chats: ${error}`);
+        res.status(500).json({ message: "An Error occured while deleting chats." });
+    }
+}
+
 export const getMessages = async (req, res) => {
+    const userId = req.userId;
     const { chatId } = req.body;
 
     if (!chatId) {
         return res.status(500).json({ message: "chat id is required" });
     }
 
-    const messages = await chatService.getMessages(chatId);
+    const messages = await chatService.getMessages(chatId, userId);
 
     try {
         const responseData = {

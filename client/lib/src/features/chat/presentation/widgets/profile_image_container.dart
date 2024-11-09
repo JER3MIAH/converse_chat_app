@@ -7,7 +7,7 @@ class ProfileImageContainer extends StatelessWidget {
   final String? icon;
   final String? title;
   final VoidCallback? onTap;
-  final bool showFullTitle;
+  final bool showFullTitle, isSelected;
   const ProfileImageContainer({
     super.key,
     this.height,
@@ -17,6 +17,7 @@ class ProfileImageContainer extends StatelessWidget {
     this.title,
     this.onTap,
     this.showFullTitle = false,
+    this.isSelected = false,
   });
 
   @override
@@ -29,21 +30,41 @@ class ProfileImageContainer extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: height ?? 43.h,
-              height: height ?? 43.h,
-              padding: padding ?? EdgeInsets.all(12.h),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: theme.secondary,
-              ),
-              child: icon == null
-                  ? SvgAsset(
-                      path: searchIcon,
-                      color: theme.onSurface,
-                    )
-                  : Image.asset(
-                      icon!.isEmpty ? 'default' : 'assets/pngs/$icon.png'),
+            Stack(
+              alignment: Alignment.bottomRight,
+              children: [
+                Container(
+                  width: height ?? 43.h,
+                  height: height ?? 43.h,
+                  padding: padding ?? EdgeInsets.all(12.h),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: theme.secondary,
+                  ),
+                  child: icon == null
+                      ? SvgAsset(
+                          path: searchIcon,
+                          color: theme.onSurface,
+                        )
+                      : Image.asset(
+                          icon!.isEmpty ? 'default' : 'assets/pngs/$icon.png'),
+                ),
+                if (isSelected)
+                  Container(
+                    height: 20.h,
+                    padding: EdgeInsets.all(2).copyWith(top: 3),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: appColors.white),
+                      color: appColors.success,
+                    ),
+                    child: Icon(
+                      Icons.check,
+                      size: 11,
+                      color: appColors.white,
+                    ),
+                  ),
+              ],
             ),
             if (title != null)
               Padding(

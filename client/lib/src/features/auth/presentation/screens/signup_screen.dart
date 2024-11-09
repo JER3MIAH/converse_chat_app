@@ -23,6 +23,7 @@ class SignupScreen extends HookConsumerWidget {
     final selectedAvater = useState<String>('default');
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Form(
         key: formKey,
         child: AppColumn(

@@ -21,6 +21,7 @@ class LoginScreen extends HookConsumerWidget {
     final passwordController = useTextEditingController();
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Form(
         key: formKey,
         child: AppColumn(

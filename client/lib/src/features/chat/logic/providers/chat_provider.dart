@@ -33,6 +33,12 @@ class ChatProvider extends ChangeNotifier {
   List<Chat> _chats = [];
   List<Chat> get chats => _chats;
 
+  final List<Chat> _selectedChats = [];
+  List<Chat> get selectedChats => _selectedChats;
+
+  // final List<Chat> _archivedChats = [];
+  // List<Chat> get archivedChats => _archivedChats;
+
   List<ChatMessage> _messages = [];
   List<ChatMessage> get messages => _messages;
 
@@ -60,6 +66,25 @@ class ChatProvider extends ChangeNotifier {
     if (updateState) notifyListeners();
   }
 
+  void selectChat(Chat value) {
+    if (_selectedChats.contains(value)) {
+      _selectedChats.remove(value);
+    } else {
+      _selectedChats.add(value);
+    }
+    notifyListeners();
+  }
+
+  void clearSelectedChats() {
+    _selectedChats.clear();
+    notifyListeners();
+  }
+
+  // void archiveChats(List<Chat> value) {
+  //   _archivedChats.addAll(value);
+  //   notifyListeners();
+  // }
+
   Future<bool> getAllUsers() async {
     final res = await chatService.getAllUsers();
     return res.fold((failure) {
@@ -78,6 +103,37 @@ class ChatProvider extends ChangeNotifier {
       return false;
     }, (chats) {
       setChats(chats);
+      return true;
+    });
+  }
+
+  Future<bool> deleteSelectedChats() async {
+    _chats.removeWhere((chat) => _selectedChats.contains(chat));
+    notifyListeners();
+    final res = await chatService.deleteChats(
+      _selectedChats.map((e) => e.id).toList(),
+    );
+    _selectedChats.clear();
+    return res.fold((failure) {
+      setErrorMessage(failure.message);
+      return false;
+    }, (_) {
+      getChats();
+      return true;
+    });
+  }
+
+  Future<bool> deleteChat(Chat chat) async {
+    _chats.remove(chat);
+    notifyListeners();
+    final res = await chatService.deleteChats(
+      [chat.id],
+    );
+    return res.fold((failure) {
+      setErrorMessage(failure.message);
+      return false;
+    }, (_) {
+      getChats();
       return true;
     });
   }
