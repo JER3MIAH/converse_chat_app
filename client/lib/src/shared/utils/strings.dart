@@ -24,4 +24,6 @@ const AVATARS = [
   'crown',
   'fire',
   'dj',
+  'facial-mask',
+  'maracas',
 ];
