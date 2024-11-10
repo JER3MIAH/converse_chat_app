@@ -20,7 +20,7 @@ class OnboardingScreen extends StatelessWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 35.w)
+                  padding: EdgeInsets.symmetric(horizontal: 75.w)
                       .copyWith(top: 50.h),
                   child: Image.asset(appIcon),
                 ),
@@ -54,7 +54,7 @@ class OnboardingScreen extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                   textAlign: TextAlign.center,
                 ),
-                YBox(100.h),
+                YBox(MediaQuery.of(context).size.height * .12),
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
