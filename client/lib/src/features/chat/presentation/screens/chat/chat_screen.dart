@@ -82,6 +82,7 @@ class ChatScreen extends HookConsumerWidget {
               repliedTo: taggedMessage.value?.id,
               senderId: authManager.currentUser!.id,
               receiverId: receiverId,
+              readBy: [authManager.currentUser!.id],
             ),
           );
       taggedMessage.value = null;

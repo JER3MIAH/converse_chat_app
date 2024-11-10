@@ -5,6 +5,7 @@ import { areArraysEqual } from "../utils/helper_funcs.js";
 
 export const getChats = async (userId) => {
     const userObjId = new mongoose.Types.ObjectId(`${userId}`);
+    //* Fetch chats wherue  userId is the participants array and not in deletedBy array
     return await Chat.find({
         participants: { $in: [userObjId] },
         deletedBy: { $ne: userId }
@@ -66,11 +67,24 @@ export const createChat = async (chatData) => {
 };
 
 export const getMessages = async (chatId, userId) => {
-    return await Message.find({
+    //* Fetch messages where userId is not in deletedBy array
+    const messages = await Message.find({
         chatId: chatId,
         deletedBy: { $ne: userId }
     });
+    //* Loop through the messages to update readBy if necessary
+    await Promise.all(
+        messages.map(async (message) => {
+            if (!message.readBy.includes(userId)) {
+                message.readBy.push(userId);
+                await message.save();
+            }
+        })
+    );
+
+    return messages;
 };
+
 
 export const createMessage = async (messageData) => {
     const message = new Message(messageData);

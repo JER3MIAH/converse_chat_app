@@ -26,6 +26,7 @@ export const trimMessageModel = (message) => {
         senderId: message.senderId,
         receiverId: message.receiverId,
         repliedTo: message.repliedTo,
+        readBy: message.readBy,
         text: message.text,
         createdAt: message.createdAt,
         updatedAt: message.updatedAt || null,

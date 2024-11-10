@@ -1,6 +1,6 @@
 import 'package:converse/src/app_injection_container.dart';
 import 'package:converse/src/core/network/socket_service.dart';
-import 'package:converse/src/features/auth/logic/services/auth_service.dart';
+// import 'package:converse/src/features/auth/logic/services/auth_service.dart';
 import 'package:converse/src/features/chat/data/models.dart';
 import 'package:converse/src/features/chat/logic/providers/chat_provider.dart';
 import 'package:converse/src/features/chat/presentation/screens/chat/chat_screen.dart';
@@ -37,7 +37,7 @@ class HomeScreen extends HookConsumerWidget {
 
     useEffect(() {
       sl<SocketService>().initializeSocket();
-      sl<AuthService>().saveFcmToken();
+      // sl<AuthService>().saveFcmToken();
       ref.read(chatProvider.notifier).getAllUsers();
       ref.read(chatProvider.notifier).getChats();
       ref.read(chatProvider.notifier).listenForNewMessage();
@@ -313,7 +313,7 @@ class HomeScreen extends HookConsumerWidget {
                               format: 'hh:mm a')
                           : '',
                       isSelected: selectedChats.contains(chat),
-                      unreadMessages: 0,
+                      unreadMessages: chat.unreadMessages,
                       onLongPress: () =>
                           ref.read(chatProvider.notifier).selectChat(chat),
                       onTap: () {

@@ -210,7 +210,7 @@ class ArchivedChatsScreen extends HookConsumerWidget {
                               format: 'hh:mm a')
                           : '',
                       isSelected: selectedChats.contains(chat),
-                      unreadMessages: 0,
+                      unreadMessages: chat.unreadMessages,
                       onLongPress: () {
                         ref.read(chatProvider.notifier).selectChat(chat);
                         if (selectedChats.isNotEmpty) {

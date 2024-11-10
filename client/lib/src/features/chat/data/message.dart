@@ -7,6 +7,7 @@ class ChatMessage {
   String senderId;
   String receiverId;
   String? repliedTo;
+  List<String> readBy;
   DateTime? createdAt;
   DateTime? updatedAt;
 
@@ -17,6 +18,7 @@ class ChatMessage {
     required this.senderId,
     required this.receiverId,
     this.repliedTo,
+    this.readBy = const [],
     this.createdAt,
     this.updatedAt,
   });
@@ -28,6 +30,7 @@ class ChatMessage {
     String? senderId,
     String? receiverId,
     String? repliedTo,
+    List<String>? readBy,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -38,31 +41,28 @@ class ChatMessage {
       senderId: senderId ?? this.senderId,
       receiverId: receiverId ?? this.receiverId,
       repliedTo: repliedTo ?? this.repliedTo,
+      readBy: readBy ?? this.readBy,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
-   ChatMessage.empty()
+  ChatMessage.empty()
       : id = '',
         chatId = '',
         text = '',
         senderId = '',
         receiverId = '',
-        repliedTo = null,
-        createdAt = null,
-        updatedAt = null;
+        readBy = [];
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      // 'id': id,
       'chatId': chatId,
       'text': text,
       'senderId': senderId,
       'receiverId': receiverId,
       if (repliedTo != null) 'repliedTo': repliedTo,
-      // 'createdAt': createdAt.toIso8601String(),
-      // 'updatedAt': updatedAt?.toIso8601String(),
+      'readBy': readBy,
     };
   }
 
@@ -74,6 +74,7 @@ class ChatMessage {
       senderId: map['senderId'] as String,
       receiverId: map['receiverId'] as String,
       repliedTo: map['repliedTo'],
+      readBy: List<String>.from(map['readBy']),
       createdAt: DateTime.parse(map['createdAt'] as String),
       updatedAt: map['updatedAt'] == null
           ? null

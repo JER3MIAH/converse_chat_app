@@ -57,8 +57,8 @@ class AppDrawer extends ConsumerWidget {
             ),
           ),
           _buildDrawerTile(
-            title: 'World Chat',
-            icon: globeIcon,
+            title: 'My Profile',
+            icon: Icons.person_2_outlined,
             onTap: () {},
           ),
           _buildDrawerTile(
@@ -68,6 +68,11 @@ class AppDrawer extends ConsumerWidget {
               Scaffold.of(context).closeDrawer();
               AppNavigator.pushNamed(ChatRoutes.archivedChats);
             },
+          ),
+          _buildDrawerTile(
+            title: 'Settings',
+            icon: settingIcon,
+            onTap: () {},
           ),
           Spacer(),
           _buildDrawerTile(

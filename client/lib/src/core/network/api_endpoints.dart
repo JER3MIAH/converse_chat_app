@@ -1,4 +1,4 @@
-const YOUR_IP_ADDRESS = '';
+const YOUR_IP_ADDRESS = '192.168.8.101';
 
 const baseUrl = 'http://$YOUR_IP_ADDRESS:5050';
 const apiVersion = 'api';

@@ -23,10 +23,17 @@ export const getChats = async (req, res) => {
                 .sort({ createdAt: -1 })
                 .limit(1);
 
+            const unreadMessagesCount = await Message.countDocuments({
+                chatId: chat.id,
+                readBy: { $ne: userId },
+                deletedBy: { $ne: userId },
+            });
+
             return {
                 ...chat.toObject(),
                 participants: populatedParticipants.map(trimUserModel),
                 lastMessage: lastMessage ? trimMessageModel(lastMessage) : null,
+                unreadMessages: unreadMessagesCount,
             };
         })
     );

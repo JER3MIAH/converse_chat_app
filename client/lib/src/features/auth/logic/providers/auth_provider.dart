@@ -66,14 +66,14 @@ class AuthProvider extends ChangeNotifier {
     });
   }
 
-  Future<bool> saveFcmToken() async {
-    final res = await authService.saveFcmToken();
-    setLoading(false);
-    return res.fold((failure) {
-      setErrorMessage(failure.message);
-      return false;
-    }, (response) {
-      return true;
-    });
-  }
+  // Future<bool> saveFcmToken() async {
+  //   final res = await authService.saveFcmToken();
+  //   setLoading(false);
+  //   return res.fold((failure) {
+  //     setErrorMessage(failure.message);
+  //     return false;
+  //   }, (response) {
+  //     return true;
+  //   });
+  // }
 }

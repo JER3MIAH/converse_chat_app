@@ -1,13 +1,14 @@
 import 'dart:developer';
-
 import 'package:converse/src/app_injection_container.dart';
 import 'package:converse/src/core/network/socket_service.dart';
 import 'package:converse/src/features/auth/data/user.dart';
 import 'package:converse/src/features/chat/data/models.dart';
 import 'package:converse/src/features/chat/logic/services/chat_service.dart';
+import 'package:converse/src/features/navigation/routes.dart';
 import 'package:converse/src/shared/shared.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 
 final chatProvider = ChangeNotifierProvider<ChatProvider>((ref) {
   return ChatProvider(chatService: sl(), socketService: sl());
@@ -237,6 +238,15 @@ class ChatProvider extends ChangeNotifier {
         if (chatIndex != -1) {
           _chats[chatIndex] =
               _chats[chatIndex].copyWith(lastMessage: newMessage);
+
+          //* If the user is not in the chat screen, increment the chat's unread messages
+          if (Get.currentRoute != ChatRoutes.chat &&
+              chats[chatIndex].id != newMessage.chatId) {
+            _chats[chatIndex] = _chats[chatIndex].copyWith(
+              unreadMessages: _chats[chatIndex].unreadMessages + 1,
+            );
+            //TODO: Also update the db
+          }
           notifyListeners();
         }
       },
