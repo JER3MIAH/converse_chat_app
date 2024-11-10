@@ -90,105 +90,109 @@ class ChatScreen extends HookConsumerWidget {
       scrollToBottom();
     }
 
+    final bottom = PreferredSize(
+      preferredSize: Size.fromHeight(.5),
+      child: Container(
+        color: theme.secondary,
+        height: 1,
+        margin: EdgeInsets.only(bottom: 5.h),
+      ),
+    );
+
     return PopScope(
+      canPop: selectedMessages.isEmpty,
       onPopInvokedWithResult: (didPop, __) {
+        ref.read(chatProvider.notifier).clearSelectedMessages();
         if (didPop) ref.read(chatProvider.notifier).setMessages([]);
       },
       child: Scaffold(
         resizeToAvoidBottomInset: true,
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(60.h),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15.w),
-            child: selectedMessages.isEmpty
-                ? AppBar(
-                    surfaceTintColor: Colors.transparent,
-                    centerTitle: false,
-                    leading: AppBackButton(
-                      onTap: () {
-                        AppNavigator.popRoute();
-                        ref.read(chatProvider.notifier).setMessages([]);
-                      },
+        appBar: selectedMessages.isEmpty
+            ? AppBar(
+                surfaceTintColor: Colors.transparent,
+                centerTitle: false,
+                leading: AppBackButton(
+                  onTap: () {
+                    AppNavigator.popRoute();
+                    ref.read(chatProvider.notifier).setMessages([]);
+                  },
+                ),
+                title: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ProfileImageContainer(
+                      height: 30.h,
+                      icon: args.chat.participants
+                          .firstWhere(
+                              (user) => user.id != authManager.currentUser!.id,
+                              orElse: () => User.empty())
+                          .avatar,
+                      padding: EdgeInsets.all(8.w),
                     ),
-                    title: Row(
+                    XBox(5.w),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        ProfileImageContainer(
-                          height: 30.h,
-                          icon: args.chat.participants
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            AppText(
+                              args.title,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ],
+                        ),
+                        // if (online)
+                        //   AppText(
+                        //     'online',
+                        //     color: appColors.success,
+                        //     fontSize: 12.sp,
+                        //   ),
+                      ],
+                    ),
+                  ],
+                ),
+                bottom: bottom,
+              )
+            : AppBar(
+                centerTitle: false,
+                title: AppText(
+                  '${selectedMessages.length}',
+                  fontSize: 18.sp,
+                ),
+                leading: IconButton(
+                  icon: Icon(
+                    Icons.clear,
+                    color: theme.onSurface,
+                  ),
+                  onPressed: () =>
+                      ref.read(chatProvider.notifier).clearSelectedMessages(),
+                ),
+                bottom: bottom,
+                actions: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.delete_outline,
+                      color: theme.onSurface,
+                    ),
+                    onPressed: () {
+                      AppDialog.dialog(
+                        DeleteMessageDialog(
+                          messages: selectedMessages.length,
+                          title: args.chat.participants
                               .firstWhere(
                                   (user) =>
                                       user.id != authManager.currentUser!.id,
                                   orElse: () => User.empty())
-                              .avatar,
-                          padding: EdgeInsets.all(8.w),
+                              .username,
                         ),
-                        XBox(5.w),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                AppText(
-                                  args.title,
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ],
-                            ),
-                            // if (online)
-                            //   AppText(
-                            //     'online',
-                            //     color: appColors.success,
-                            //     fontSize: 12.sp,
-                            //   ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  )
-                : AppBar(
-                    centerTitle: false,
-                    title: AppText(
-                      '${selectedMessages.length}',
-                      fontSize: 18.sp,
-                    ),
-                    leading: IconButton(
-                      icon: Icon(
-                        Icons.clear,
-                        color: theme.onSurface,
-                      ),
-                      onPressed: () => ref
-                          .read(chatProvider.notifier)
-                          .clearSelectedMessages(),
-                    ),
-                    actions: [
-                      IconButton(
-                        icon: Icon(
-                          Icons.delete_outline,
-                          color: theme.onSurface,
-                        ),
-                        onPressed: () {
-                          AppDialog.dialog(
-                            DeleteMessageDialog(
-                              messages: selectedMessages.length,
-                              title: args.chat.participants
-                                  .firstWhere(
-                                      (user) =>
-                                          user.id !=
-                                          authManager.currentUser!.id,
-                                      orElse: () => User.empty())
-                                  .username,
-                            ),
-                          );
-                        },
-                      ),
-                    ],
+                      );
+                    },
                   ),
-          ),
-        ),
+                ],
+              ),
         body: messages.isEmpty
             ? Center(
                 child: Padding(

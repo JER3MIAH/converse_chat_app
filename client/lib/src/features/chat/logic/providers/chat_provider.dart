@@ -48,9 +48,9 @@ class ChatProvider extends ChangeNotifier {
   List<ChatMessage> _messages = [];
   List<ChatMessage> get messages => _messages;
 
-  void setLoading(bool value) {
+  void setLoading(bool value, {bool updateState = true}) {
     _isLoading = value;
-    notifyListeners();
+    if (updateState) notifyListeners();
   }
 
   void setErrorMessage(String value) {
@@ -209,8 +209,14 @@ class ChatProvider extends ChangeNotifier {
   Future<bool> getMessages({
     required Chat chat,
   }) async {
+    setLoading(true, updateState: false);
     await chatService.createChat(chat);
     final res = await chatService.getMessages(chat.id);
+
+    final chatIndex = _chats.indexWhere((c) => c.id == chat.id);
+    _chats[chatIndex] = _chats[chatIndex].copyWith(unreadMessages: 0);
+
+    setLoading(false);
     return res.fold((failure) {
       setErrorMessage(failure.message);
       return false;
@@ -240,12 +246,11 @@ class ChatProvider extends ChangeNotifier {
               _chats[chatIndex].copyWith(lastMessage: newMessage);
 
           //* If the user is not in the chat screen, increment the chat's unread messages
-          if (Get.currentRoute != ChatRoutes.chat &&
-              chats[chatIndex].id != newMessage.chatId) {
+          if (!(Get.currentRoute == ChatRoutes.chat &&
+              chats[chatIndex].id == newMessage.chatId)) {
             _chats[chatIndex] = _chats[chatIndex].copyWith(
               unreadMessages: _chats[chatIndex].unreadMessages + 1,
             );
-            //TODO: Also update the db
           }
           notifyListeners();
         }

@@ -16,6 +16,7 @@ export const trimChatModel = (chat) => {
         participants: chat.participants,
         isArchived: chat.isArchived,
         lastMessage: chat.lastMessage || null,
+        unreadMessages: chat.unreadMessages,
     };
 };
 

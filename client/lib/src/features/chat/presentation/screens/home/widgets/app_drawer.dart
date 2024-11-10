@@ -58,7 +58,7 @@ class AppDrawer extends ConsumerWidget {
           ),
           _buildDrawerTile(
             title: 'My Profile',
-            icon: Icons.person_2_outlined,
+            icon: Icons.person,
             onTap: () {},
           ),
           _buildDrawerTile(
@@ -71,7 +71,7 @@ class AppDrawer extends ConsumerWidget {
           ),
           _buildDrawerTile(
             title: 'Settings',
-            icon: settingIcon,
+            icon: Icons.settings,
             onTap: () {},
           ),
           Spacer(),
