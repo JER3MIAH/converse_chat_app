@@ -12,10 +12,10 @@ export const getChats = async (userId) => {
 };
 
 export const getChat = async (chatId, userId) => {
-    await Chat.updateOne(
-        { id: chatId, deletedBy: userId },
-        { $pull: { deletedBy: userId } }
-    );
+    // await Chat.updateOne(
+    //     { id: chatId, deletedBy: userId },
+    //     { $pull: { deletedBy: userId } }
+    // );
     return await Chat.findOne({ id: chatId });
 };
 
@@ -30,10 +30,7 @@ export const deleteChat = async (chatId, userId) => {
     if (!chat) {
         throw new Error("Chat not found");
     }
-    if (areArraysEqual(chat.deletedBy, chat.participants.map(user => user.toString()))) {
-        await Message.deleteMany({ chatId: chatId });
-        return await Chat.findOneAndDelete({ id: chatId });
-    }
+
     if (chat.deletedBy.includes(userId)) {
         return;
     }
@@ -41,6 +38,11 @@ export const deleteChat = async (chatId, userId) => {
         { id: chatId },
         { $addToSet: { deletedBy: userId } }
     );
+
+    if (areArraysEqual(chat.deletedBy, chat.participants.map(user => user.toString()))) {
+        await Message.deleteMany({ chatId: chatId });
+        await Chat.findOneAndDelete({ id: chatId });
+    }
 
     //* Update the deletedBy field for all messages in the chat
     await Message.updateMany(
@@ -51,6 +53,11 @@ export const deleteChat = async (chatId, userId) => {
 
 export const getChatsByIds = async (chatIds) => {
     return await Chat.find({ id: { $in: chatIds } });
+};
+
+export const getMessagesByIds = async (messageIds) => {
+    const messageObjIds = messageIds.map(m => new mongoose.Types.ObjectId(`${m}`));
+    return await Message.find({ _id: { $in: messageObjIds } });
 };
 
 export const createChat = async (chatData) => {
@@ -70,9 +77,23 @@ export const createMessage = async (messageData) => {
     return await message.save();
 };
 
-export const deleteMessage = async (messageId) => {
+export const deleteMessage = async (messageId, userId, deleteForEveryone) => {
     const messageObjId = new mongoose.Types.ObjectId(`${messageId}`);
-    return await Message.findByIdAndDelete(messageObjId);
+    const message = await Message.findById(messageObjId);
+    const chat = await getChat(message.chatId);
+
+    if (message.deletedBy.includes(userId)) {
+        return;
+    }
+    await Message.findByIdAndUpdate(
+        messageObjId,
+        { $addToSet: { deletedBy: userId } }
+    );
+
+    if (deleteForEveryone === true || areArraysEqual(message.deletedBy, chat.participants.map(user => user.toString()))) {
+        await Message.findByIdAndDelete(messageObjId);
+    }
+
 };
 
 export const updateMessage = async (messageId, newMessage) => {

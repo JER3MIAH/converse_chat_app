@@ -8,6 +8,10 @@ abstract class ChatService {
   Future<Either<Failure, List<Chat>>> getChats();
   Future<Either<Failure, dynamic>> archiveChats(List<String> chatIds);
   Future<Either<Failure, dynamic>> deleteChats(List<String> chatIds);
+  Future<Either<Failure, dynamic>> deleteMessages(
+    List<String> messageIds,
+    bool deleteForEveryone,
+  );
   Future<Either<Failure, List<User>>> getAllUsers();
   Future<Either<Failure, List<ChatMessage>>> getMessages(String chatId);
   Future<Either<Failure, void>> createChat(Chat chat);
@@ -64,7 +68,7 @@ class ChatServiceImpl extends ChatService {
     try {
       final response = await client.patch(
         chatEndpoints.archiveChats,
-        data: {"chatIds": chatIds},
+        data: {'chatIds': chatIds},
       );
       log('archive chats response: $response');
 
@@ -80,7 +84,7 @@ class ChatServiceImpl extends ChatService {
     try {
       final response = await client.delete(
         chatEndpoints.deleteChats,
-        data: {"chatIds": chatIds},
+        data: {'chatIds': chatIds},
       );
       log('delete chats response: $response');
 
@@ -92,11 +96,33 @@ class ChatServiceImpl extends ChatService {
   }
 
   @override
+  Future<Either<Failure, dynamic>> deleteMessages(
+    List<String> messageIds,
+    bool deleteForEveryone,
+  ) async {
+    try {
+      final response = await client.delete(
+        chatEndpoints.deleteMessages,
+        data: {
+          'messageIds': messageIds,
+          'deleteForEveryone': deleteForEveryone,
+        },
+      );
+      log('delete messages response: $response');
+
+      return right(null);
+    } catch (err, stack) {
+      log('delete messages error: $err\n$stack');
+      return left(ApiFailure(message: err.toString()));
+    }
+  }
+
+  @override
   Future<Either<Failure, List<ChatMessage>>> getMessages(String chatId) async {
     try {
       final response = await client.get(
         chatEndpoints.getMessages,
-        data: {"chatId": chatId},
+        data: {'chatId': chatId},
       );
       log('Get messages response: $response');
       final messages = List<ChatMessage>.from(

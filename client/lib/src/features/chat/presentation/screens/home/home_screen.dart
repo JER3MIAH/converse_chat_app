@@ -102,7 +102,7 @@ class HomeScreen extends HookConsumerWidget {
                     ),
                   )
                 : SliverAppBar(
-                    expandedHeight: users.isEmpty ? 0 : 170.h,
+                    expandedHeight: users.isEmpty ? 0 : 160.h,
                     pinned: true,
                     centerTitle: false,
                     title: selectedChats.isNotEmpty

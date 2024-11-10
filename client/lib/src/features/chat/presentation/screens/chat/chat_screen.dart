@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
+import 'delete_message_dialog.dart';
 import 'widgets/message_box.dart';
 
 class ChatScreenArgs {
@@ -37,6 +37,7 @@ class ChatScreen extends HookConsumerWidget {
     final vsync = useSingleTickerProvider();
     final slidableController = useMemoized(() => SlidableController(vsync));
     final messages = ref.watch(chatProvider).messages;
+    final selectedMessages = ref.watch(chatProvider).selectedMessages;
     final taggedMessage = useState<ChatMessage?>(null);
 
     void scrollToBottom() {
@@ -98,53 +99,93 @@ class ChatScreen extends HookConsumerWidget {
           preferredSize: Size.fromHeight(60.h),
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 15.w),
-            child: AppBar(
-              surfaceTintColor: Colors.transparent,
-              centerTitle: false,
-              leading: AppBackButton(
-                onTap: () {
-                  AppNavigator.popRoute();
-                  ref.read(chatProvider.notifier).setMessages([]);
-                },
-              ),
-              title: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ProfileImageContainer(
-                    height: 30.h,
-                    icon: args.chat.participants
-                        .firstWhere(
-                            (user) => user.id != authManager.currentUser!.id,
-                            orElse: () => User.empty())
-                        .avatar,
-                    padding: EdgeInsets.all(8.w),
-                  ),
-                  XBox(5.w),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          AppText(
-                            args.title,
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ],
+            child: selectedMessages.isEmpty
+                ? AppBar(
+                    surfaceTintColor: Colors.transparent,
+                    centerTitle: false,
+                    leading: AppBackButton(
+                      onTap: () {
+                        AppNavigator.popRoute();
+                        ref.read(chatProvider.notifier).setMessages([]);
+                      },
+                    ),
+                    title: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ProfileImageContainer(
+                          height: 30.h,
+                          icon: args.chat.participants
+                              .firstWhere(
+                                  (user) =>
+                                      user.id != authManager.currentUser!.id,
+                                  orElse: () => User.empty())
+                              .avatar,
+                          padding: EdgeInsets.all(8.w),
+                        ),
+                        XBox(5.w),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                AppText(
+                                  args.title,
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ],
+                            ),
+                            // if (online)
+                            //   AppText(
+                            //     'online',
+                            //     color: appColors.success,
+                            //     fontSize: 12.sp,
+                            //   ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
+                : AppBar(
+                    centerTitle: false,
+                    title: AppText(
+                      '${selectedMessages.length}',
+                      fontSize: 18.sp,
+                    ),
+                    leading: IconButton(
+                      icon: Icon(
+                        Icons.clear,
+                        color: theme.onSurface,
                       ),
-                      // if (online)
-                      //   AppText(
-                      //     'online',
-                      //     color: appColors.success,
-                      //     fontSize: 12.sp,
-                      //   ),
+                      onPressed: () => ref
+                          .read(chatProvider.notifier)
+                          .clearSelectedMessages(),
+                    ),
+                    actions: [
+                      IconButton(
+                        icon: Icon(
+                          Icons.delete_outline,
+                          color: theme.onSurface,
+                        ),
+                        onPressed: () {
+                          AppDialog.dialog(
+                            DeleteMessageDialog(
+                              messages: selectedMessages.length,
+                              title: args.chat.participants
+                                  .firstWhere(
+                                      (user) =>
+                                          user.id !=
+                                          authManager.currentUser!.id,
+                                      orElse: () => User.empty())
+                                  .username,
+                            ),
+                          );
+                        },
+                      ),
                     ],
                   ),
-                ],
-              ),
-            ),
           ),
         ),
         body: messages.isEmpty
@@ -162,49 +203,59 @@ class ChatScreen extends HookConsumerWidget {
                 itemBuilder: (context, index) {
                   final message = messages[index];
 
-                  return Slidable(
-                    key: ValueKey(index),
-                    startActionPane: ActionPane(
-                      extentRatio: 0.3,
-                      motion: const StretchMotion(),
-                      dragDismissible: false,
-                      closeThreshold: .2,
-                      dismissible: DismissiblePane(
-                        onDismissed: () {
-                          taggedMessage.value = message;
-                          slidableController.close();
-                        },
-                      ),
-                      children: [
-                        SlidableAction(
-                          onPressed: (_) {
+                  return GestureDetector(
+                    onTap: () {
+                      if (selectedMessages.isNotEmpty) {
+                        ref.read(chatProvider.notifier).selectMessage(message);
+                      }
+                    },
+                    onLongPress: () =>
+                        ref.read(chatProvider.notifier).selectMessage(message),
+                    child: Slidable(
+                      key: ValueKey(index),
+                      startActionPane: ActionPane(
+                        extentRatio: 0.3,
+                        motion: const StretchMotion(),
+                        dragDismissible: false,
+                        closeThreshold: .2,
+                        dismissible: DismissiblePane(
+                          onDismissed: () {
                             taggedMessage.value = message;
                             slidableController.close();
                           },
-                          icon: Icons.reply,
-                          backgroundColor: Colors.transparent,
-                          foregroundColor: theme.primary,
                         ),
-                      ],
-                    ),
-                    child: ChatBox(
-                      sender: args.title,
-                      time: formatDate(message.createdAt,
-                          format: 'MMM dd hh:mm a'),
-                      chatText: message.text,
-                      isTagged: message.repliedTo != null,
-                      sentByYou:
-                          message.senderId == authManager.currentUser!.id,
-                      replyTitle:
-                          message.senderId == authManager.currentUser!.id
-                              ? authManager.currentUser!.username
-                              : args.title,
-                      replySubtitle: messages
-                          .firstWhere(
-                            (element) => element.id == message.repliedTo,
-                            orElse: () => ChatMessage.empty(),
-                          )
-                          .text,
+                        children: [
+                          SlidableAction(
+                            onPressed: (_) {
+                              taggedMessage.value = message;
+                              slidableController.close();
+                            },
+                            icon: Icons.reply,
+                            backgroundColor: Colors.transparent,
+                            foregroundColor: theme.primary,
+                          ),
+                        ],
+                      ),
+                      child: ChatBox(
+                        sender: args.title,
+                        time: formatDate(message.createdAt,
+                            format: 'MMM dd hh:mm a'),
+                        chatText: message.text,
+                        isTagged: message.repliedTo != null,
+                        isSelected: selectedMessages.contains(message),
+                        sentByYou:
+                            message.senderId == authManager.currentUser!.id,
+                        replyTitle:
+                            message.senderId == authManager.currentUser!.id
+                                ? authManager.currentUser!.username
+                                : args.title,
+                        replySubtitle: messages
+                            .firstWhere(
+                              (element) => element.id == message.repliedTo,
+                              orElse: () => ChatMessage.empty(),
+                            )
+                            .text,
+                      ),
                     ),
                   );
                 },

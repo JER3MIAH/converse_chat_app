@@ -47,6 +47,10 @@ export const createChat = async (req, res) => {
     const userId = req.userId;
     const { id, participants, lastMessage } = req.body;
 
+    if (!id || !participants) {
+        res.status(400).json({ message: "id and participants is required" });
+    }
+
     const participantsList = participants.map(participant => {
         const userObjId = new mongoose.Types.ObjectId(`${participant.id}`);
         return userObjId;
@@ -95,8 +99,8 @@ export const createChat = async (req, res) => {
 export const archiveChats = async (req, res) => {
     const { chatIds } = req.body;
 
-    if (!chatIds || chatIds.length == 0) {
-        return res.status(500).json({ message: "chatIds is required" });
+    if (!chatIds || chatIds.length === 0) {
+        return res.status(400).json({ message: "chatIds is required" });
     }
 
     try {
@@ -118,8 +122,8 @@ export const deleteChats = async (req, res) => {
     const userId = req.userId;
     const { chatIds } = req.body;
 
-    if (!chatIds || chatIds.length == 0) {
-        return res.status(500).json({ message: "chatIds is required" });
+    if (!chatIds || chatIds.length === 0) {
+        return res.status(400).json({ message: "chatIds is required" });
     }
 
     try {
@@ -142,7 +146,7 @@ export const getMessages = async (req, res) => {
     const { chatId } = req.body;
 
     if (!chatId) {
-        return res.status(500).json({ message: "chat id is required" });
+        return res.status(400).json({ message: "chatId is required" });
     }
 
     const messages = await chatService.getMessages(chatId, userId);
@@ -156,5 +160,32 @@ export const getMessages = async (req, res) => {
     } catch (error) {
         console.error(`Error fetching messages: ${error}`);
         res.status(500).json({ message: "An Error occured while fetching messages." });
+    }
+}
+
+export const deleteMessages = async (req, res) => {
+    const userId = req.userId;
+    const { messageIds, deleteForEveryone } = req.body;
+
+    if (!Array.isArray(messageIds) || messageIds.length === 0) {
+        return res.status(400).json({ message: "messageIds is required and should be an array." });
+    }
+
+    if (typeof deleteForEveryone !== 'boolean') {
+        return res.status(400).json({ message: "deleteForEveryone is required and must be true or false." });
+    }
+
+    try {
+        const selectedMessages = await chatService.getMessagesByIds(messageIds);
+        await Promise.all(selectedMessages.map(async (message) => {
+            await chatService.deleteMessage(message.id, userId, deleteForEveryone);
+        }));
+        const responseData = {
+            message: "Messages deleted successfully",
+        };
+        res.json(responseData);
+    } catch (error) {
+        console.error(`Error fetching messages: ${error}`);
+        res.status(500).json({ message: "An Error occured while deleting messages." });
     }
 }

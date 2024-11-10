@@ -36,6 +36,9 @@ class ChatProvider extends ChangeNotifier {
   final List<Chat> _selectedChats = [];
   List<Chat> get selectedChats => _selectedChats;
 
+  final List<ChatMessage> _selectedMessages = [];
+  List<ChatMessage> get selectedMessages => _selectedMessages;
+
   List<Chat> get archivedChats =>
       _chats.where((chat) => chat.isArchived).toList();
   List<Chat> get unarchivedChats =>
@@ -68,6 +71,15 @@ class ChatProvider extends ChangeNotifier {
     if (updateState) notifyListeners();
   }
 
+  void selectMessage(ChatMessage value) {
+    if (_selectedMessages.contains(value)) {
+      _selectedMessages.remove(value);
+    } else {
+      _selectedMessages.add(value);
+    }
+    notifyListeners();
+  }
+
   void selectChat(Chat value) {
     if (_selectedChats.contains(value)) {
       _selectedChats.remove(value);
@@ -82,10 +94,10 @@ class ChatProvider extends ChangeNotifier {
     if (updateState) notifyListeners();
   }
 
-  // void archiveChats(List<Chat> value) {
-  //   _archivedChats.addAll(value);
-  //   notifyListeners();
-  // }
+  void clearSelectedMessages({bool updateState = true}) {
+    _selectedMessages.clear();
+    if (updateState) notifyListeners();
+  }
 
   Future<bool> getAllUsers() async {
     final res = await chatService.getAllUsers();
@@ -134,11 +146,29 @@ class ChatProvider extends ChangeNotifier {
       _selectedChats.map((e) => e.id).toList(),
     );
     _selectedChats.clear();
+    notifyListeners();
     return res.fold((failure) {
       setErrorMessage(failure.message);
       return false;
     }, (_) {
       getChats();
+      return true;
+    });
+  }
+
+  Future<bool> deleteSelectedMessages({required bool deleteForEveryone}) async {
+    _messages.removeWhere((message) => _selectedMessages.contains(message));
+    notifyListeners();
+    final res = await chatService.deleteMessages(
+      _selectedMessages.map((e) => e.id).toList(),
+      deleteForEveryone,
+    );
+    _selectedMessages.clear();
+    notifyListeners();
+    return res.fold((failure) {
+      setErrorMessage(failure.message);
+      return false;
+    }, (_) {
       return true;
     });
   }

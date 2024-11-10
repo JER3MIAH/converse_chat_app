@@ -71,7 +71,7 @@ export const login = async (req, res) => {
                 console.error("Error hashing password:", err);
                 return res.status(500).json("Error logging up");
             }
-            if (result == true) {
+            if (result === true) {
                 const token = generateToken(existingUSer);
                 const responseData = {
                     data: trimUserModel(existingUSer),

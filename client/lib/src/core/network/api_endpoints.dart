@@ -17,6 +17,7 @@ class _ChatEndpoints {
   final getChats = '$baseUrl/$apiVersion/chat/get-chats';
   final archiveChats = '$baseUrl/$apiVersion/chat/archive-chats';
   final deleteChats = '$baseUrl/$apiVersion/chat/delete-chats';
+  final deleteMessages = '$baseUrl/$apiVersion/chat/delete-messages';
   final createChat = '$baseUrl/$apiVersion/chat/create-chat';
   final createMessage = '$baseUrl/$apiVersion/chat/get-chats';
   final getMessages = '$baseUrl/$apiVersion/chat/get-messages';
