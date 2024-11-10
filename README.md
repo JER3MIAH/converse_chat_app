@@ -90,7 +90,12 @@ A simple real-time chat application built with **Flutter** for the frontend and 
    flutter pub get
    ```
 
-3. **Run the Flutter App**
+3. **Set up API URL**
+
+   - Navigate to `client/lib/src/core/network/api_endpoints.dart`.
+   - Update the IP address where required.
+
+4. **Run the Flutter App**
 
    ```bash
    flutter run
