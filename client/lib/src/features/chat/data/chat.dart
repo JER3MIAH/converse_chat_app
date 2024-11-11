@@ -14,7 +14,7 @@ class Chat {
     required this.participants,
     this.lastMessage,
     this.isArchived = false,
-    this.unreadMessages=0,
+    this.unreadMessages = 0,
   });
 
   Map<String, dynamic> toMap() {
@@ -62,5 +62,16 @@ class Chat {
       isArchived: isArchived ?? this.isArchived,
       unreadMessages: unreadMessages ?? this.unreadMessages,
     );
+  }
+
+  @override
+  bool operator ==(covariant Chat other) {
+    if (identical(this, other)) return true;
+    return other.id == id;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode;
   }
 }

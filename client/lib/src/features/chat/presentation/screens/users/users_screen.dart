@@ -56,36 +56,38 @@ class AllUsersScreen extends HookConsumerWidget {
           onChanged: filterUsers,
         ),
       ),
-      body: Column(
-        children: List.generate(
-          filteredUsers.value.length,
-          (index) {
-            final user = filteredUsers.value[index];
-            return ChatTile(
-              title: user.username,
-              subtitle: user.email,
-              avatar: user.avatar,
-              time: '',
-              onTap: () {
-                AppNavigator.pushNamed(
-                  ChatRoutes.chat,
-                  args: ChatScreenArgs(
-                    title: user.email,
-                    chat: Chat(
-                      id: generateChatId(
-                        id1: authManager.currentUser!.id,
-                        id2: user.id,
+      body: SingleChildScrollView(
+        child: Column(
+          children: List.generate(
+            filteredUsers.value.length,
+            (index) {
+              final user = filteredUsers.value[index];
+              return ChatTile(
+                title: user.username,
+                subtitle: user.email,
+                avatar: user.avatar,
+                time: '',
+                onTap: () {
+                  AppNavigator.pushNamed(
+                    ChatRoutes.chat,
+                    args: ChatScreenArgs(
+                      title: user.email,
+                      chat: Chat(
+                        id: generateChatId(
+                          id1: authManager.currentUser!.id,
+                          id2: user.id,
+                        ),
+                        participants: [
+                          authManager.currentUser!,
+                          user,
+                        ],
                       ),
-                      participants: [
-                        authManager.currentUser!,
-                        user,
-                      ],
                     ),
-                  ),
-                );
-              },
-            );
-          },
+                  );
+                },
+              );
+            },
+          ),
         ),
       ),
     );

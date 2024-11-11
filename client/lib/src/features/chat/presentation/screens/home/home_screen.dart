@@ -268,11 +268,11 @@ class HomeScreen extends HookConsumerWidget {
                     startActionPane: ActionPane(
                       extentRatio: .2,
                       motion: ScrollMotion(),
-                      dismissible: DismissiblePane(
-                        dismissThreshold: 0.4,
-                        onDismissed: () => sendRequest(
-                            ref.read(chatProvider.notifier).archiveChat(chat)),
-                      ),
+                      // dismissible: DismissiblePane(
+                      //   dismissThreshold: 0.4,
+                      //   onDismissed: () => sendRequest(
+                      //       ref.read(chatProvider.notifier).archiveChat(chat)),
+                      // ),
                       children: [
                         SlidableAction(
                           onPressed: (_) => sendRequest(ref

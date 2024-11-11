@@ -38,6 +38,13 @@ export const getChats = async (req, res) => {
         })
     );
 
+    //* Sort chats by the `createdAt` timestamp of `lastMessage` in descending order
+    populatedChats.sort((a, b) => {
+        const dateA = a.lastMessage ? new Date(a.lastMessage.createdAt) : new Date(0);
+        const dateB = b.lastMessage ? new Date(b.lastMessage.createdAt) : new Date(0);
+        return dateB - dateA;
+    });
+
     try {
         const responseData = {
             data: populatedChats.map(trimChatModel),

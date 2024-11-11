@@ -41,7 +41,6 @@ class ArchivedChatsScreen extends HookConsumerWidget {
     }
 
     useEffect(() {
-      ref.read(chatProvider.notifier).clearSelectedChats(updateState: false);
       searchController.addListener(() {
         filterChats(searchController.text);
       });
@@ -66,7 +65,7 @@ class ArchivedChatsScreen extends HookConsumerWidget {
       child: Scaffold(
         appBar: barStatus.value == AppBarState.SEARCH
             ? AppBar(
-                centerTitle: true,
+                centerTitle: false,
                 leading: IconButton(
                   icon: Icon(
                     Icons.clear,
@@ -83,22 +82,31 @@ class ArchivedChatsScreen extends HookConsumerWidget {
                   onChanged: filterChats,
                 ),
               )
-            : barStatus.value == AppBarState.SELECTION
-                ? AppBar(
-                    centerTitle: false,
-                    title: AppText(
-                      '${selectedChats.length}',
-                      fontSize: 18.sp,
-                    ),
-                    leading: IconButton(
-                      icon: Icon(
-                        Icons.clear,
-                        color: theme.onSurface,
+            : AppBar(
+                centerTitle: false,
+                title: selectedChats.isNotEmpty
+                    ? AppText(
+                        '${selectedChats.length}',
+                        fontSize: 18.sp,
+                      )
+                    : AppText(
+                        'Archived Chats',
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w600,
                       ),
-                      onPressed: () =>
-                          ref.read(chatProvider.notifier).clearSelectedChats(),
-                    ),
-                    actions: [
+                leading: selectedChats.isNotEmpty
+                    ? IconButton(
+                        icon: Icon(
+                          Icons.clear,
+                          color: theme.onSurface,
+                        ),
+                        onPressed: () => ref
+                            .read(chatProvider.notifier)
+                            .clearSelectedChats(),
+                      )
+                    : AppBackButton(),
+                actions: selectedChats.isNotEmpty
+                    ? [
                         IconButton(
                           icon: Icon(
                             Icons.delete_outline,
@@ -117,25 +125,17 @@ class ArchivedChatsScreen extends HookConsumerWidget {
                               .read(chatProvider.notifier)
                               .archiveSelectedChats()),
                         ),
-                      ])
-                : AppBar(
-                    leading: AppBackButton(),
-                    centerTitle: false,
-                    title: AppText(
-                      'Archived Chats',
-                      fontSize: 15.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    actions: [
-                      Padding(
-                        padding: EdgeInsets.only(right: 5),
-                        child: IconButton(
-                          onPressed: () => setBarStatus(AppBarState.SEARCH),
-                          icon: SvgAsset(path: searchIcon),
+                      ]
+                    : [
+                        Padding(
+                          padding: EdgeInsets.only(right: 5),
+                          child: IconButton(
+                            onPressed: () => setBarStatus(AppBarState.SEARCH),
+                            icon: SvgAsset(path: searchIcon),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+              ),
         body: archivedChats.isEmpty
             ? Center(
                 child: AppText(
@@ -165,11 +165,11 @@ class ArchivedChatsScreen extends HookConsumerWidget {
                     startActionPane: ActionPane(
                       extentRatio: .2,
                       motion: ScrollMotion(),
-                      dismissible: DismissiblePane(
-                        dismissThreshold: 0.4,
-                        onDismissed: () => sendRequest(
-                            ref.read(chatProvider.notifier).archiveChat(chat)),
-                      ),
+                      // dismissible: DismissiblePane(
+                      //   dismissThreshold: 0.4,
+                      //   onDismissed: () => sendRequest(
+                      //       ref.read(chatProvider.notifier).archiveChat(chat)),
+                      // ),
                       children: [
                         SlidableAction(
                           onPressed: (_) => sendRequest(ref
@@ -211,18 +211,11 @@ class ArchivedChatsScreen extends HookConsumerWidget {
                           : '',
                       isSelected: selectedChats.contains(chat),
                       unreadMessages: chat.unreadMessages,
-                      onLongPress: () {
-                        ref.read(chatProvider.notifier).selectChat(chat);
-                        if (selectedChats.isNotEmpty) {
-                          setBarStatus(AppBarState.SELECTION);
-                        }
-                      },
+                      onLongPress: () =>
+                          ref.read(chatProvider.notifier).selectChat(chat),
                       onTap: () {
                         if (selectedChats.isNotEmpty) {
                           ref.read(chatProvider.notifier).selectChat(chat);
-                          if (selectedChats.isNotEmpty) {
-                            setBarStatus(AppBarState.SELECTION);
-                          }
                           return;
                         }
                         AppNavigator.pushNamed(

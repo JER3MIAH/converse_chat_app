@@ -84,9 +84,12 @@ class ChatProvider extends ChangeNotifier {
   void selectChat(Chat value) {
     if (_selectedChats.contains(value)) {
       _selectedChats.remove(value);
+      log('removed chat');
     } else {
       _selectedChats.add(value);
+      log('added chat');
     }
+    log('selected chats ${_selectedChats.length}');
     notifyListeners();
   }
 
