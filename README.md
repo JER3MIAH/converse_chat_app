@@ -2,6 +2,10 @@
 
 A simple real-time chat application built with **Flutter** for the frontend and **Node.js/Express** for the backend. This application supports user authentication, real-time messaging, and chat management.
 
+<p align="center">
+  <img src="./client/assets/demo.gif" alt="App Demo" width="600"/>
+</p>
+
 ## Features
 
 - **User Authentication**:
